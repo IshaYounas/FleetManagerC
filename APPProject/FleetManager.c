@@ -126,7 +126,33 @@ void addMachine(machineT** top)
 
 void displayToScreen(machineT* top)
 {
+	if (top == NULL)
+	{
+		printf("No machines to display\n");
+		return;
+	} // if
 
+	printf("Machines in the fleet:\n");
+	
+	while (top != NULL)
+	{
+		printf("Chassis Number %d", top->chassisNum);
+		printf("Make: %s\n", top->make);
+		printf("Model: %s\n", top->model);
+		printf("Year: %d\n", top->year);
+		printf("Cost: %.2f\n", top->cost);
+		printf("Valuation: %.2f\n", top->valuation);
+		printf("Mileage: %d\n", top->mileage);
+		printf("Next Service Mileage: %d\n", top->nextServiceMileage);
+		printf("Owner Name: %s\n", top->ownerName);
+		printf("Owner Email: %s\n", top->ownerEmail);
+		printf("Owner Phone: %s\n", top->ownerPhone);
+		printf("Machine Type: %d\n", top->machineType);
+		printf("Breakdown: %d\n", top->breakdown);	
+
+		top = top->NEXT; // next machine
+	} // while
+	printf("End of list\n");
 } // displayToScreen
 
 void displayMachineDetails(machineT* top)
