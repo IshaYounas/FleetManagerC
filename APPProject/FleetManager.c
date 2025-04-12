@@ -21,25 +21,25 @@ typedef struct machine
 	char ownerName[50];
 	char ownerEmail[50];
 	char ownerPhone[50];
-	char machineType[50];
+	int machineType;
 	int breakdown;
-}MachineT;
+}machineT;
 
 // function prototypes
-void addMachine(MachineT** top);
-void displayToScreen(MachineT* top);
-void displayMachineDetails(MachineT* top);
-void updateMachine(MachineT* top);
-void deleteMachine(MachineT** top);
-void generateStatistics(MachineT* top);
-void saveToFile(MachineT* top);
-void listMachines(MachineT* top);
+void addMachine(machineT** top);
+void displayToScreen(machineT* top);
+void displayMachineDetails(machineT* top);
+void updateMachine(machineT* top);
+void deleteMachine(machineT** top);
+void generateStatistics(machineT* top);
+void saveToFile(machineT* top);
+void listMachines(machineT* top);
 int menu();
 
 int main()
 {
 	// variables
-	MachineT* top = NULL; 
+	machineT* top = NULL; 
 	int choice;
 
 	do {
@@ -76,45 +76,85 @@ int main()
 			default:
 				printf("Invalid choice. Please try again.\n");
 		} // switch
-	} while (choice != -1); // do-ehile
+	} while (choice != -1); // do-while
 } // main
 
-void addMachine(MachineT** top)
+void addMachine(machineT** top)
 {
+	machineT* newMachine;
+	newMachine = (machineT*)malloc(sizeof(machineT));
+	if (newMachine == NULL)
+	{
+		printf("Memory allocation failed\n");
+		return;
+	} // if
+
+	// prompting the user for input
+	printf("Enter chassis number: ");
+	scanf("%s", newMachine->chassisNum);
+	printf("Enter make: ");
+	scanf("%s", newMachine->make);
+	printf("Enter model: ");
+	scanf("%s", newMachine->model);
+	printf("Enter year: ");
+	scanf("%d", &newMachine->year);
+	printf("Enter cost: ");
+	scanf("%f", &newMachine->cost);
+	printf("Enter valuation: ");
+	scanf("%f", &newMachine->valuation);
+	printf("Enter mileage: ");
+	scanf("%d", &newMachine->mileage);
+	printf("Enter next service mileage: ");
+	scanf("%d", &newMachine->nextServiceMileage);
+	printf("Enter owner name: ");
+	scanf("%s", newMachine->ownerName);
+	printf("Enter owner email: ");
+	scanf("%s", newMachine->ownerEmail);
+	printf("Enter owner phone: ");
+	scanf("%s", newMachine->ownerPhone);
+	printf("Enter machine type: ");
+	scanf("%d", &newMachine->machineType);
+	printf("Enter breakdown (1 for yes, 0 for no): ");
+	scanf("%d", &newMachine->breakdown);
+
+	newMachine->NEXT = *top; // adding to linked list
+	*top = newMachine; // update top pointer
+
+	printf("Machine added successfully\n");
 
 } // addMachine
 
-void displayToScreen(MachineT* top)
+void displayToScreen(machineT* top)
 {
 
 } // displayToScreen
 
-void displayMachineDetails(MachineT* top)
+void displayMachineDetails(machineT* top)
 {
 
 } // displayMachineDetails
 
-void updateMachine(MachineT* top)
+void updateMachine(machineT* top)
 {
 
 } // updateMachine
 
-void deleteMachine(MachineT** top)
+void deleteMachine(machineT** top)
 {
 
 } // deleteMachine
 
-void generateStatistics(MachineT* top)
+void generateStatistics(machineT* top)
 {
 
 } // genearteStatistics
 
-void saveToFile(MachineT* top)
+void saveToFile(machineT* top)
 {
 
 } // saveToFile
 
-void listMachines(MachineT* top)
+void listMachines(machineT* top)
 {
 
 } // listMachines
