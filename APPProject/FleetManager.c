@@ -26,49 +26,47 @@ typedef struct machine
 }machineT;
 
 // function prototypes
-void addMachine(machineT** top);
-void displayToScreen(machineT* top);
-void displayMachineDetails(machineT* top);
-void updateMachine(machineT* top);
-void deleteMachine(machineT** top);
-void generateStatistics(machineT* top);
-void saveToFile(machineT* top);
-void listMachines(machineT* top);
+void addMachine(machineT** top); // option 1
+void displayToScreen(machineT* top); // option 2
+void displayMachineDetails(machineT* top); // option 3
+void updateMachine(machineT* top); // option 4
+void deleteMachine(machineT** top); // option 5
+void generateStatistics(machineT* top); // option 6
+void saveToFile(machineT* top); 
+void listMachines(machineT* top); // option 7
 int menu();
 
 int main()
 {
 	// variables
-	machineT* top = NULL; 
-	int choice;
+	machineT* headPtr = NULL; 
+	int option;
 
-	do {
-		choice = menu();
-		switch (choice)
+	do 
+	{
+		option = menu();
+		switch (option)
 		{
 			case 1:
-				addMachine(&top);
+				addMachine(&headPtr);
 				break;
 			case 2:
-				displayToScreen(top);
+				displayToScreen(headPtr);
 				break;
 			case 3:
-				displayMachineDetails(top);
+				displayMachineDetails(headPtr);
 				break;
 			case 4:
-				updateMachine(top);
+				updateMachine(headPtr);
 				break;
 			case 5:
-				deleteMachine(top);
+				deleteMachine(headPtr);
 				break;
 			case 6:
-				generateStatistics(top);
+				generateStatistics(headPtr);
 				break;
 			case 7:
-				saveToFile(top);
-				break;
-			case 8:
-				listMachines(top);
+				listMachines(headPtr);
 				break;
 			case -1:
 				printf("Exiting...\n");
@@ -76,10 +74,14 @@ int main()
 			default:
 				printf("Invalid choice. Please try again.\n");
 		} // switch
-	} while (choice != -1); // do-while
+		// keep repeating unit option is not -1
+	} while (option != -1); // do-while
+	
+	//saveToFile(headPtr); // calling the save method
 } // main
 
-void addMachine(machineT** top)
+// custom method
+void addMachine(machineT** top) // adding machinery 
 {
 	machineT* newMachine;
 	newMachine = (machineT*)malloc(sizeof(machineT));
@@ -124,7 +126,7 @@ void addMachine(machineT** top)
 
 } // addMachine
 
-void displayToScreen(machineT* top)
+void displayToScreen(machineT* top) // displaying all the machinery
 {
 	if (top == NULL)
 	{
@@ -136,7 +138,7 @@ void displayToScreen(machineT* top)
 	
 	while (top != NULL)
 	{
-		printf("Chassis Number %d", top->chassisNum);
+		printf("Chassis number: %s", top->chassisNum);
 		printf("Make: %s\n", top->make);
 		printf("Model: %s\n", top->model);
 		printf("Year: %d\n", top->year);
@@ -155,9 +157,43 @@ void displayToScreen(machineT* top)
 	printf("End of list\n");
 } // displayToScreen
 
-void displayMachineDetails(machineT* top)
+void displayMachineDetails(machineT* top) // asking user for a specific machine to display
 {
+	char displayChassis[50];
+	int found = 0; // default not found
 
+	printf("Enter chassis number to display details: ");
+	scanf("%s", displayChassis);
+
+	while (top != NULL)
+	{
+		if (strcmp(top->chassisNum, displayChassis) == 0) // comparing the string
+		{
+			printf("Chassis Number: %s\n", top->chassisNum);
+			printf("Make: %s\n", top->make);
+			printf("Model: %s\n", top->model);
+			printf("Year: %d\n", top->year);
+			printf("Cost: %.2f\n", top->cost);
+			printf("Valuation: %.2f\n", top->valuation);
+			printf("Mileage: %d\n", top->mileage);
+			printf("Next Service Mileage: %d\n", top->nextServiceMileage);
+			printf("Owner Name: %s\n", top->ownerName);
+			printf("Owner Email: %s\n", top->ownerEmail);
+			printf("Owner Phone: %s\n", top->ownerPhone);
+			printf("Machine Type: %d\n", top->machineType);
+			printf("Breakdown: %d\n", top->breakdown);
+
+			found = 1;
+			break;
+		} // if
+
+		top = top->NEXT; // next machine
+	} // while
+
+	if (found == 0)
+	{
+		printf("Machine with chassis number %s not found\n", displayChassis);
+	} // if
 } // displayMachineDetails
 
 void updateMachine(machineT* top)
