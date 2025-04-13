@@ -99,7 +99,7 @@ void addMachine(machineT** top) // adding machinery
 	{
 		if (strcmp(current->chassisNum, newChassis) == 0)
 		{
-			printf("Sorry the chassis number %s already exists\n", newChassis);
+			printf("Sorry the chassis number %s already exists\n\n", newChassis);
 			return;
 		} // if
 		current = current->NEXT; // next machine
@@ -108,7 +108,7 @@ void addMachine(machineT** top) // adding machinery
 	newMachine = (machineT*)malloc(sizeof(machineT));
 	if (newMachine == NULL)
 	{
-		printf("Memory allocation failed\n");
+		printf("Memory allocation failed\n\n");
 		return;
 	} // if
 	
@@ -147,7 +147,7 @@ void addMachine(machineT** top) // adding machinery
 	{
 		newMachine->NEXT = *top; // adding to linked list
 		*top = newMachine; // update top pointer
-		printf("Machine added successfully\n");
+		printf("Machine added successfully\n\n");
 		return;
 	} // if
 	
@@ -163,14 +163,14 @@ void addMachine(machineT** top) // adding machinery
 		newMachine->NEXT = prev->NEXT; // adding to linked list
 		prev->NEXT = newMachine; // update top pointer
 	}
-	printf("Machine added successfully\n");
+	printf("Machine added successfully\n\n");
 } // addMachine
 
 void displayToScreen(machineT* top) // displaying all the machinery
 {
 	if (top == NULL)
 	{
-		printf("No machines to display\n");
+		printf("No machines to display\n\n");
 		return;
 	} // if
 
@@ -194,7 +194,7 @@ void displayToScreen(machineT* top) // displaying all the machinery
 
 		top = top->NEXT; // next machine
 	} // while
-	printf("End of list\n");
+	printf("End of list\n\n");
 } // displayToScreen
 
 void displayMachineDetails(machineT* top) // asking user for a specific machine to display
@@ -221,7 +221,7 @@ void displayMachineDetails(machineT* top) // asking user for a specific machine 
 			printf("Owner Email: %s\n", top->ownerEmail);
 			printf("Owner Phone: %s\n", top->ownerPhone);
 			printf("Machine Type: %d\n", top->machineType);
-			printf("Breakdown: %d\n", top->breakdown);
+			printf("Breakdown: %d\n\n", top->breakdown);
 
 			found = 1;
 			break;
@@ -232,13 +232,57 @@ void displayMachineDetails(machineT* top) // asking user for a specific machine 
 
 	if (found == 0)
 	{
-		printf("Machine with chassis number %s not found\n", displayChassis);
+		printf("Machine with chassis number %s not found\n\n", displayChassis);
 	} // if
 } // displayMachineDetails
 
 void updateMachine(machineT* top)
 {
+	machineT* current = top;
+	char searchNum[50];
 
+	printf("Enter chassis number of the machine to update: ");
+	scanf("%s", searchNum);
+
+	while (current != NULL)
+	{
+		if (strcmp(current->chassisNum, searchNum) == 0) // comparing the strings
+		{
+			printf("Machine found.\n");
+
+			printf("Enter new make: ");
+			scanf("%s", current->make);
+			printf("Enter new model: ");
+			scanf("%s", current->model);
+			printf("Enter new year: ");
+			scanf("%d", &current->year);
+			printf("Enter new cost: ");
+			scanf("%f", &current->cost);
+			printf("Enter new valuation: ");
+			scanf("%f", &current->valuation);
+			printf("Enter new mileage: ");
+			scanf("%d", &current->mileage);
+			printf("Enter new next service mileage: ");
+			scanf("%d", &current->nextServiceMileage);
+			printf("Enter new owner name: ");
+			scanf("%s", current->ownerName);
+			printf("Enter new owner email: ");
+			scanf("%s", current->ownerEmail);
+			printf("Enter new owner phone: ");
+			scanf("%s", current->ownerPhone);
+			printf("Enter new machine type: ");
+			scanf("%d", &current->machineType);
+			printf("Enter new breakdown (1 for yes, 0 for no): ");
+			scanf("%d", &current->breakdown);
+
+
+			printf("Machine updated successfully\n\n");
+			return;
+		} // if
+		current = current->NEXT; // next machine
+	} // while
+
+	printf("Machine with chassis number %s not found\n\n", searchNum);
 } // updateMachine
 
 void deleteMachine(machineT** top)
