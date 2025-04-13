@@ -135,10 +135,63 @@ void addMachine(machineT** top) // adding machinery
 	scanf("%s", newMachine->ownerEmail);
 	printf("Enter owner phone: ");
 	scanf("%s", newMachine->ownerPhone);
-	printf("Enter machine type: ");
+
+
+	printf("Enter machine type (1 for Tractor, 2 for Excavator, 3 for Roller, 4 for Crane, 5 for Mixer): ");
 	scanf("%d", &newMachine->machineType);
-	printf("Enter breakdown (1 for yes, 0 for no): ");
+
+	switch (newMachine->machineType)
+	{
+		case 1:
+			printf("Tractor\n");
+			break;
+
+		case 2:
+			printf("Excavator\n");
+			break;
+
+		case 3:
+			printf("Roller\n");
+			break;
+
+		case 4:
+			printf("Crane\n");
+			break;
+
+		case 5:
+			printf("Mixer\n");
+			break;
+
+		default:
+			printf("Invalid machine type\n");
+			break;
+	} // switch
+
+	printf("Enter breakdown (1 for Never, 2 for Less than three times, 3 for Less than five times, 4 for More than five times): ");
 	scanf("%d", &newMachine->breakdown);
+
+	switch (newMachine->breakdown)
+	{
+		case 1:
+			printf("Breakdown: Never\n");
+			break;
+
+		case 2:
+			printf("Breakdown: Less than three times\n");
+			break;
+
+		case 3:
+			printf("Breakdown: Less than five times\n");
+			break;
+
+		case 4:
+			printf("Breakdown: More than five times\n");
+			break;
+
+		default:
+			printf("Invalid breakdown\n");
+			break;
+	} // switch
 
 	newMachine->NEXT = NULL; 
 
@@ -270,18 +323,70 @@ void updateMachine(machineT* top)
 			scanf("%s", current->ownerEmail);
 			printf("Enter new owner phone: ");
 			scanf("%s", current->ownerPhone);
-			printf("Enter new machine type: ");
+
+
+			printf("Enter new machine type (1 for Tractor, 2 for Excavator, 3 for Roller, 4 for Crane, 5 for Mixer): ");
 			scanf("%d", &current->machineType);
-			printf("Enter new breakdown (1 for yes, 0 for no): ");
+
+			switch (current->machineType)
+			{
+				case 1:
+					printf("Tractor\n");
+					break;
+
+				case 2:
+					printf("Excavator\n");
+					break;
+
+				case 3:
+					printf("Roller\n");
+					break;
+
+				case 4:
+					printf("Crane\n");
+					break;
+
+				case 5:
+					printf("Mixer\n");
+					break;
+
+				default:
+					printf("Invalid machine type\n");
+					break;
+			} // switch
+
+			printf("Enter new breakdown (1 for Never, 2 for Less than three times, 3 for Less than five times, 4 for More than five times): ");
 			scanf("%d", &current->breakdown);
 
+			switch (current->breakdown)
+			{
+				case 1:
+					printf("Breakdown: Never\n");
+					break;
 
-			printf("Machine updated successfully\n\n");
-			return;
+				case 2:
+					printf("Breakdown: Less than three times\n");
+					break;
+
+				case 3:
+					printf("Breakdown: Less than five times\n");
+					break;
+
+				case 4:
+					printf("Breakdown: More than five times\n");
+					break;
+
+				default:
+					printf("Invalid breakdown\n");
+					break;
+
+
+					printf("Machine updated successfully\n\n");
+					return;
+			} // switch
 		} // if
 		current = current->NEXT; // next machine
 	} // while
-
 	printf("Machine with chassis number %s not found\n\n", searchNum);
 } // updateMachine
 
@@ -299,14 +404,14 @@ void deleteMachine(machineT** top)
 		if (strcmp(current->chassisNum, searchNum) == 0) // comparing the strings
 		{
 			// machine found
-			if (prev == NULL) 
+			if (prev == NULL)
 			{
-				*top = current->NEXT; 
+				*top = current->NEXT;
 			} // if
 
 			else
 			{
-				prev->NEXT = current->NEXT; 
+				prev->NEXT = current->NEXT;
 			} // else
 
 			free(current); // free memory
@@ -315,15 +420,130 @@ void deleteMachine(machineT** top)
 		} // if
 
 		prev = current; // updating prev ptr
-		current = current->NEXT; 
+		current = current->NEXT;
 	} // while
-
 	printf("Machine with chassis number %s not found\n\n", searchNum);
 } // deleteMachine
 
+
 void generateStatistics(machineT* top)
 {
+	// variables
+	machineT* current;
+	int tractor[4] = { 0 };
+	int excavator[4] = { 0 };
+	int roller[4] = { 0 };
+	int crane[4] = { 0 };
+	int mixer[4] = { 0 };
 
+	int totalTractor = 0;
+	int totalExcavator = 0;
+	int totalRoller = 0;
+	int totalCrane = 0;
+	int totalMixer = 0;
+
+	if (top == NULL)
+	{
+		printf("No machines to generate statistics\n\n");
+		return;
+	} // if
+
+	current = top;
+
+	while (current != NULL)
+	{
+		switch (current->machineType)
+		{
+			case 1: // tractor
+				totalTractor++;
+				if (current->breakdown == 1) tractor[0]++;
+				else if (current->breakdown == 2) tractor[1]++;
+				else if (current->breakdown == 3) tractor[2]++;
+				else if (current->breakdown == 4) tractor[3]++;
+				break;
+
+			case 2: // excavator
+				totalExcavator++;
+				if (current->breakdown == 1) excavator[0]++;
+				else if (current->breakdown == 2) excavator[1]++;
+				else if (current->breakdown == 3) excavator[2]++;
+				else if (current->breakdown == 4) excavator[3]++;
+				break;
+
+			case 3: // roller
+				totalRoller++;
+				if (current->breakdown == 1) roller[0]++;
+				else if (current->breakdown == 2) roller[1]++;
+				else if (current->breakdown == 3) roller[2]++;
+				else if (current->breakdown == 4) roller[3]++;
+				break;
+
+			case 4: // crane
+				totalCrane++;
+				if (current->breakdown == 1) crane[0]++;
+				else if (current->breakdown == 2) crane[1]++;
+				else if (current->breakdown == 3) crane[2]++;
+				else if (current->breakdown == 4) crane[3]++;
+				break;
+
+			case 5: // mixer
+				totalMixer++;
+				if (current->breakdown == 1) mixer[0]++;
+				else if (current->breakdown == 2) mixer[1]++;
+				else if (current->breakdown == 3) mixer[2]++;
+				else if (current->breakdown == 4) mixer[3]++;
+				break;
+		} // switch
+		current = current->NEXT; 
+	} // while
+
+	// printing statistics
+	printf("Statistics:\n");
+	
+	if (totalTractor > 0)
+	{
+		printf("Tractors:\n");
+		printf("Never: %d\n", tractor[0]);
+		printf("Less than three times: %d\n", tractor[1]);
+		printf("Less than five times: %d\n", tractor[2]);
+		printf("More than five times: %d\n\n", tractor[3]);
+	} // if
+
+	if (totalExcavator > 0)
+	{
+		printf("Excavators:\n");
+		printf("Never: %d\n", excavator[0]);
+		printf("Less than three times: %d\n", excavator[1]);
+		printf("Less than five times: %d\n", excavator[2]);
+		printf("More than five times: %d\n\n", excavator[3]);
+	} // if
+
+	if (totalRoller > 0)
+	{
+		printf("Rollers:\n");
+		printf("Never: %d\n", roller[0]);
+		printf("Less than three times: %d\n", roller[1]);
+		printf("Less than five times: %d\n", roller[2]);
+		printf("More than five times: %d\n\n", roller[3]);
+	} // if
+
+	if (totalCrane > 0)
+	{
+		printf("Cranes:\n");
+		printf("Never: %d\n", crane[0]);
+		printf("Less than three times: %d\n", crane[1]);
+		printf("Less than five times: %d\n", crane[2]);
+		printf("More than five times: %d\n\n", crane[3]);
+	} // if
+
+	if (totalMixer > 0)
+	{
+		printf("Mixers:\n");
+		printf("Never: %d\n", mixer[0]);
+		printf("Less than three times: %d\n", mixer[1]);
+		printf("Less than five times: %d\n", mixer[2]);
+		printf("More than five times: %d\n\n", mixer[3]);
+	} // if
 } // genearteStatistics
 
 void saveToFile(machineT* top)
