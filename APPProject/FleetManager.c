@@ -5,7 +5,7 @@
 #include<string.h> // strings
 
 // structure for linked list
-typedef struct machine
+typedef struct node
 {
 	// variables for the stuct
 	struct node* NEXT;
@@ -83,17 +83,38 @@ int main()
 // custom method
 void addMachine(machineT** top) // adding machinery 
 {
+	// variables
 	machineT* newMachine;
+	machineT* current;
+	machineT* prev = NULL;
+	char newChassis[50];
+
+	current = *top;
+
+	printf("Enter chassis number: ");
+	scanf("%s", newChassis);
+
+	// checking if the chassis number is unique or not
+	while (current != NULL)
+	{
+		if (strcmp(current->chassisNum, newChassis) == 0)
+		{
+			printf("Sorry the chassis number %s already exists\n", newChassis);
+			return;
+		} // if
+		current = current->NEXT; // next machine
+	} // while
+
 	newMachine = (machineT*)malloc(sizeof(machineT));
 	if (newMachine == NULL)
 	{
 		printf("Memory allocation failed\n");
 		return;
 	} // if
+	
+	strcpy(newMachine->chassisNum, newChassis); // string copy
 
 	// prompting the user for input
-	printf("Enter chassis number: ");
-	scanf("%s", newMachine->chassisNum);
 	printf("Enter make: ");
 	scanf("%s", newMachine->make);
 	printf("Enter model: ");
@@ -119,11 +140,30 @@ void addMachine(machineT** top) // adding machinery
 	printf("Enter breakdown (1 for yes, 0 for no): ");
 	scanf("%d", &newMachine->breakdown);
 
-	newMachine->NEXT = *top; // adding to linked list
-	*top = newMachine; // update top pointer
+	newMachine->NEXT = NULL; 
 
+	// inserting in a sorted order by the chassis number
+	if (*top == NULL || strcmp(newMachine->chassisNum, (*top)->chassisNum) < 0)
+	{
+		newMachine->NEXT = *top; // adding to linked list
+		*top = newMachine; // update top pointer
+		printf("Machine added successfully\n");
+		return;
+	} // if
+	
+	else
+	{
+		prev = *top;
+
+		while (prev->NEXT != NULL && strcmp(prev->NEXT->chassisNum, newMachine->chassisNum) < 0)
+		{
+			prev = prev->NEXT; // next machine
+		} // while
+
+		newMachine->NEXT = prev->NEXT; // adding to linked list
+		prev->NEXT = newMachine; // update top pointer
+	}
 	printf("Machine added successfully\n");
-
 } // addMachine
 
 void displayToScreen(machineT* top) // displaying all the machinery
