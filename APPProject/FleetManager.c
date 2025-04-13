@@ -287,7 +287,38 @@ void updateMachine(machineT* top)
 
 void deleteMachine(machineT** top)
 {
+	char searchNum[50];
+	machineT* current = *top;
+	machineT* prev = NULL;
 
+	printf("Enter chassis number of the machine to delete: ");
+	scanf("%s", searchNum);
+
+	while (current != NULL)
+	{
+		if (strcmp(current->chassisNum, searchNum) == 0) // comparing the strings
+		{
+			// machine found
+			if (prev == NULL) 
+			{
+				*top = current->NEXT; 
+			} // if
+
+			else
+			{
+				prev->NEXT = current->NEXT; 
+			} // else
+
+			free(current); // free memory
+			printf("Machine with chassis number %s deleted successfully\n\n", searchNum);
+			return;
+		} // if
+
+		prev = current; // updating prev ptr
+		current = current->NEXT; 
+	} // while
+
+	printf("Machine with chassis number %s not found\n\n", searchNum);
 } // deleteMachine
 
 void generateStatistics(machineT* top)
