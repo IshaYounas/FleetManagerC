@@ -77,7 +77,7 @@ int main()
 		// keep repeating unit option is not -1
 	} while (option != -1); // do-while
 	
-	//saveToFile(headPtr); // calling the save method
+	saveToFile(headPtr); // calling the save method
 } // main
 
 // custom method
@@ -548,7 +548,129 @@ void generateStatistics(machineT* top)
 
 void saveToFile(machineT* top)
 {
+	// variables
+	machineT* current;
+	FILE* fp;
 
+	int tractor[4] = { 0 };
+	int excavator[4] = { 0 };
+	int roller[4] = { 0 };
+	int crane[4] = { 0 };
+	int mixer[4] = { 0 };
+
+	int totalTractor = 0;
+	int totalExcavator = 0;
+	int totalRoller = 0;
+	int totalCrane = 0;
+	int totalMixer = 0;
+
+	current = top;
+	fp = fopen("report.txt", "w");
+
+	if (fp == NULL)
+	{
+		printf("report.txt cannot be opened for writing\n");
+		return;
+	} // if
+
+	else
+	{
+		fprintf(fp, "Fleet Manager Report\n");
+		while (current != NULL)
+		{
+			fprintf(fp, "Chassis Number: %s\n", current->chassisNum);
+			fprintf(fp, "Make: %s\n", current->make);
+			fprintf(fp, "Model: %s\n", current->model);
+			fprintf(fp, "Year: %d\n", current->year);
+			fprintf(fp, "Cost: %.2f\n", current->cost);
+			fprintf(fp, "Valuation: %.2f\n", current->valuation);
+			fprintf(fp, "Mileage: %d\n", current->mileage);
+			fprintf(fp, "Next Service Mileage: %d\n", current->nextServiceMileage);
+			fprintf(fp, "Owner Name: %s\n", current->ownerName);
+			fprintf(fp, "Owner Email: %s\n", current->ownerEmail);
+			fprintf(fp, "Owner Phone: %s\n", current->ownerPhone);
+			fprintf(fp, "Machine Type: %d\n", current->machineType);
+			fprintf(fp, "Breakdown: %d\n", current->breakdown);
+
+			switch (current->machineType)
+			{
+				case 1:
+					totalTractor++;
+					tractor[current->breakdown - 1]++;
+					break;
+
+				case 2:
+					totalExcavator++;
+					excavator[current->breakdown - 1]++;
+					break;
+
+				case 3:
+					totalRoller++;
+					roller[current->breakdown - 1]++;
+					break;
+
+				case 4:
+					totalCrane++;
+					crane[current->breakdown - 1]++;
+					break;
+
+				case 5:
+					totalMixer++;
+					mixer[current->breakdown - 1]++;
+					break;
+			} // switch
+			current = current->NEXT; 
+		} // while
+
+		fprintf(fp, "\nStatistics:\n");
+		if (totalTractor > 0)
+		{
+			fprintf(fp, "Tractors:\n");
+			fprintf(fp, "Never: %d\n", tractor[0]);
+			fprintf(fp, "Less than three times: %d\n", tractor[1]);
+			fprintf(fp, "Less than five times: %d\n", tractor[2]);
+			fprintf(fp, "More than five times: %d\n\n", tractor[3]);
+		} // if
+
+		if (totalExcavator > 0)
+		{
+			fprintf(fp, "Excavators:\n");
+			fprintf(fp, "Never: %d\n", excavator[0]);
+			fprintf(fp, "Less than three times: %d\n", excavator[1]);
+			fprintf(fp, "Less than five times: %d\n", excavator[2]);
+			fprintf(fp, "More than five times: %d\n\n", excavator[3]);
+		} // if
+
+		if (totalRoller > 0)
+		{
+			fprintf(fp, "Rollers:\n");
+			fprintf(fp, "Never: %d\n", roller[0]);
+			fprintf(fp, "Less than three times: %d\n", roller[1]);
+			fprintf(fp, "Less than five times: %d\n", roller[2]);
+			fprintf(fp, "More than five times: %d\n\n", roller[3]);
+		} // if
+
+		if (totalCrane > 0)
+		{
+			fprintf(fp, "Cranes:\n");
+			fprintf(fp, "Never: %d\n", crane[0]);
+			fprintf(fp, "Less than three times: %d\n", crane[1]);
+			fprintf(fp, "Less than five times: %d\n", crane[2]);
+			fprintf(fp, "More than five times: %d\n\n", crane[3]);
+		} // if
+
+		if (totalMixer > 0)
+		{
+			fprintf(fp, "Mixers:\n");
+			fprintf(fp, "Never: %d\n", mixer[0]);
+			fprintf(fp, "Less than three times: %d\n", mixer[1]);
+			fprintf(fp, "Less than five times: %d\n", mixer[2]);
+			fprintf(fp, "More than five times: %d\n\n", mixer[3]);
+		} // if
+
+		fclose(fp); // close file
+		printf("Data saved to report.txt\n\n");
+	} // else
 } // saveToFile
 
 void listMachines(machineT* top)

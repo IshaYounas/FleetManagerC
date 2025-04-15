@@ -1,0 +1,41 @@
+Fleet Manager Report
+Chassis Number: 23a
+Make: ford
+Model: focus
+Year: 1999
+Cost: 2000.00
+Valuation: 2345.00
+Mileage: 89
+Next Service Mileage: 100
+Owner Name: isha
+Owner Email: ishay
+Owner Phone: 087654321
+Machine Type: 1
+Breakdown: 1
+Chassis Number: 29b
+Make: audi
+Model: a3
+Year: 2024
+Cost: 300.00
+Valuation: 400.00
+Mileage: 198
+Next Service Mileage: 200
+Owner Name: isha
+Owner Email: ishay
+Owner Phone: 0987654321
+Machine Type: 5
+Breakdown: 4
+
+Statistics:
+Tractors:
+Never: 1
+Less than three times: 0
+Less than five times: 0
+More than five times: 0
+
+Mixers:
+Never: 0
+Less than three times: 0
+Less than five times: 0
+More than five times: 1
+
