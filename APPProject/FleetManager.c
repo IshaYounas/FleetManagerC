@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include<stdlib.h> // malloc
 #include<string.h> // strings
+#include<conio.h> // hiding the password
 
 // structure for linked list
 typedef struct node
@@ -39,8 +40,69 @@ int menu();
 int main()
 {
 	// variables
-	machineT* headPtr = NULL; 
+	machineT* headPtr = NULL;
 	int option;
+	int user;
+	int adminOption;
+	FILE* fp;
+	char password[20];
+	char savedPass[20];
+	int i = 0;
+	char ch;
+
+	// admin or guest
+	printf("PLease enter 1 for admin or 0 for guest\n");
+	scanf("%d", &user);
+
+	if (user == 1) // admin
+	{
+		printf("User is Admin\n");
+
+		fp = fopen("login.txt", "r");
+
+		if (fp == NULL) // file no open
+		{
+			printf("login.txt cannot be opened for reading\n");
+			return 0;
+		} // if
+
+		fscanf(fp, "%s", savedPass);
+		fclose(fp);
+
+		// prompting the admin for the password
+		printf("Enter Admin Password\n");
+
+		while ((ch = _getch()) != '\r') // until enter is pressed
+		{
+			if (ch != 13) // no enter key
+			{
+				password[i] = ch; // store the character
+				i++;
+				printf("*"); // print asterisk
+			} // if
+		} // while
+
+		password[i] = '\0'; 
+		printf("\n"); 
+
+		if (strcmp(password, savedPass) == 0) // passwords match 
+		{
+			printf("Admin login successful\n");
+		} // if
+
+		else // passwords NO match
+		{
+			printf("Incorrect password. Proceeding as Guest\n");
+		} // else
+
+		fclose(fp); // close login.txt
+	} // if
+
+	else if (user == 0) // guest
+	{
+		// P3
+		printf("User is guest\n");
+	} // else if 
 
 	do 
 	{
@@ -57,7 +119,15 @@ int main()
 				displayMachineDetails(headPtr);
 				break;
 			case 4:
-				updateMachine(headPtr);
+				if (user == 1) // admin
+				{
+					updateMachine(headPtr);
+				} // if
+
+				else if (user == 0) // user
+				{
+					printf("Only admin have permission to edit the book!\n");
+				} // else if
 				break;
 			case 5:
 				deleteMachine(headPtr);
@@ -231,7 +301,7 @@ void displayToScreen(machineT* top) // displaying all the machinery
 	
 	while (top != NULL)
 	{
-		printf("Chassis number: %s", top->chassisNum);
+		printf("Chassis number: %s\n", top->chassisNum);
 		printf("Make: %s\n", top->make);
 		printf("Model: %s\n", top->model);
 		printf("Year: %d\n", top->year);
@@ -379,11 +449,10 @@ void updateMachine(machineT* top)
 				default:
 					printf("Invalid breakdown\n");
 					break;
-
-
-					printf("Machine updated successfully\n\n");
-					return;
 			} // switch
+
+			printf("Machine updated successfully\n\n");
+			return;
 		} // if
 		current = current->NEXT; // next machine
 	} // while
@@ -424,7 +493,6 @@ void deleteMachine(machineT** top)
 	} // while
 	printf("Machine with chassis number %s not found\n\n", searchNum);
 } // deleteMachine
-
 
 void generateStatistics(machineT* top)
 {
@@ -565,16 +633,17 @@ void saveToFile(machineT* top)
 	int totalMixer = 0;
 
 	current = top;
-	fp = fopen("report.txt", "w");
+	fp = fopen("report.txt", "w"); // write mode
 
-	if (fp == NULL)
+	if (fp == NULL) //  file no open
 	{
-		printf("report.txt cannot be opened for writing\n");
+		printf("report.txt cannot be opened for writing\n"); 
 		return;
 	} // if
 
-	else
+	else // file open
 	{
+		// writing to the file
 		fprintf(fp, "Fleet Manager Report\n");
 		while (current != NULL)
 		{
@@ -590,7 +659,7 @@ void saveToFile(machineT* top)
 			fprintf(fp, "Owner Email: %s\n", current->ownerEmail);
 			fprintf(fp, "Owner Phone: %s\n", current->ownerPhone);
 			fprintf(fp, "Machine Type: %d\n", current->machineType);
-			fprintf(fp, "Breakdown: %d\n", current->breakdown);
+			fprintf(fp, "Breakdown: %d\n\n", current->breakdown);
 
 			switch (current->machineType)
 			{
@@ -675,7 +744,72 @@ void saveToFile(machineT* top)
 
 void listMachines(machineT* top)
 {
+	// variables
+	machineT* temp;
+	machineT* list;
+	int count = 0;
+	int i;
+	int j;
 
+	if (top == NULL)
+	{
+		printf("No machines to display\n\n");
+		return;
+	} // if
+
+	temp = top;
+
+	while (temp != NULL)
+	{
+		count++;
+		temp = temp->NEXT; // next machine
+	} // while
+
+	list = (machineT*)malloc(count * sizeof(machineT));
+	if (list == NULL)
+	{
+		printf("Memory allocation failed\n\n");
+		return;
+	} // if
+
+	temp = top;
+	for (i = 0; i < count; i++)
+	{
+		list[i] = *temp; // copying the data
+		temp = temp->NEXT; // next machine
+	} // for
+
+	for (i = 0; i < count; i++)
+	{
+		for (j = 0; j < count - i - 1; j++)
+		{
+			if (list[j].valuation > list[j + 1].valuation)
+			{
+				machineT tempMachine = list[j];
+				list[j] = list[j + 1];
+				list[j + 1] = tempMachine;
+			} // if
+		} // for (j)
+	} // for (i)
+
+	printf("Machines in order of valuation:\n");
+	for (int i = 0; i < count; i++)
+	{
+		printf("Chassis Number: %s\n", list[i].chassisNum);
+		printf("Make: %s\n", list[i].make);
+		printf("Model: %s\n", list[i].model);
+		printf("Year: %d\n", list[i].year);
+		printf("Cost: %.2f\n", list[i].cost);
+		printf("Valuation: %.2f\n", list[i].valuation);
+		printf("Mileage: %d\n", list[i].mileage);
+		printf("Next Service Mileage: %d\n", list[i].nextServiceMileage);
+		printf("Owner Name: %s\n", list[i].ownerName);
+		printf("Owner Email: %s\n", list[i].ownerEmail);
+		printf("Owner Phone: %s\n", list[i].ownerPhone);
+		printf("Machine Type: %d\n", list[i].machineType);
+		printf("Breakdown: %d\n\n", list[i].breakdown);
+	} // for
+	free(list); // free memory
 } // listMachines
 
 int menu()
