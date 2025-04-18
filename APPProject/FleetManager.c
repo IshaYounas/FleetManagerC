@@ -158,6 +158,7 @@ void addMachine(machineT** top) // adding machinery
 	machineT* current;
 	machineT* prev = NULL;
 	char newChassis[50];
+	int validEmail = 0;
 
 	current = *top;
 
@@ -201,8 +202,26 @@ void addMachine(machineT** top) // adding machinery
 	scanf("%d", &newMachine->nextServiceMileage);
 	printf("Enter owner name: ");
 	scanf("%s", newMachine->ownerName);
-	printf("Enter owner email: ");
-	scanf("%s", newMachine->ownerEmail);
+
+	// validating the email
+	do
+	{
+		printf("Enter owner email (must contain an @, a full stop and a .com): ");
+		scanf("%s", newMachine->ownerEmail);
+
+		// checking if the email is valid
+		if (strstr(newMachine->ownerEmail, "@") != NULL && strstr(newMachine->ownerEmail, ".") != NULL && strstr(newMachine->ownerEmail, ".com") != NULL)
+		{
+			validEmail = 1; // valid email
+		} // if
+		else
+		{
+			printf("Invalid email. Please enter a valid email address.\n");
+			validEmail = 0; // invalid email
+		} // else
+	} while (!validEmail); // do - while
+
+
 	printf("Enter owner phone: ");
 	scanf("%s", newMachine->ownerPhone);
 
