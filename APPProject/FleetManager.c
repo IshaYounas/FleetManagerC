@@ -5,6 +5,10 @@
 #include<string.h> // strings
 #include<conio.h> // hiding the password
 
+// constants
+#define MAX_LOGIN_RECORDS 3
+#define PASSWORD_LENGTH 7
+
 // structure for linked list
 typedef struct node
 {
@@ -26,6 +30,14 @@ typedef struct node
 	int breakdown;
 }machineT;
 
+// structure for login
+typedef struct 
+{
+	// variables for the stuct
+	char username[20];
+	char password[PASSWORD_LENGTH];
+}loginT;
+
 // function prototypes
 void addMachine(machineT** top); // option 1
 void displayToScreen(machineT* top); // option 2
@@ -35,6 +47,7 @@ void deleteMachine(machineT** top); // option 5
 void generateStatistics(machineT* top); // option 6
 void saveToFile(machineT* top); 
 void listMachines(machineT* top); // option 7
+int login(loginT* data);
 int menu();
 
 int main()
@@ -45,47 +58,37 @@ int main()
 	int user;
 	int adminOption;
 	FILE* fp;
-	char password[20];
-	char savedPass[20];
-	int i = 0;
-	char ch;
+	loginT* data[3];
+	int i;
 
-	// admin or guest
+	for (i = 0; i < MAX_LOGIN_RECORDS; i++)
+	{
+		data[i] = (loginT*)malloc(sizeof(loginT));
+	} // for
+
+	fp = fopen("login.txt", "r");
+
+	if (fp == NULL) // file no open
+	{
+		printf("login.txt cannot be opened for reading\n");
+	} // if
+
+	else // file open
+	{
+		for (i = 0; i < MAX_LOGIN_RECORDS; i++)
+		{
+			fscanf(fp, "%s %s", data[i]->username, data[i]->password);
+		} // for
+		fclose(fp);
+	} // else
+
+	// prompting the user for input
 	printf("PLease enter 1 for admin or 0 for guest\n");
 	scanf("%d", &user);
 
 	if (user == 1) // admin
 	{
-		printf("User is Admin\n");
-
-		fp = fopen("login.txt", "r");
-
-		if (fp == NULL) // file no open
-		{
-			printf("login.txt cannot be opened for reading\n");
-			return 0;
-		} // if
-
-		fscanf(fp, "%s", savedPass);
-		fclose(fp);
-
-		// prompting the admin for the password
-		printf("Enter Admin Password\n");
-
-		while ((ch = _getch()) != '\r') // until enter is pressed
-		{
-			if (ch != 13) // no enter key
-			{
-				password[i] = ch; // store the character
-				i++;
-				printf("*"); // print asterisk
-			} // if
-		} // while
-
-		password[i] = '\0'; 
-		printf("\n"); 
-
-		if (strcmp(password, savedPass) == 0) // passwords match 
+		if (login(data) == 1) // passwords match 
 		{
 			printf("Admin login successful\n");
 		} // if
@@ -94,15 +97,12 @@ int main()
 		{
 			printf("Incorrect password. Proceeding as Guest\n");
 		} // else
-
-		fclose(fp); // close login.txt
 	} // if
 
-	else if (user == 0) // guest
+	else if (user == 0) // user
 	{
-		// P3
 		printf("User is guest\n");
-	} // else if 
+	} // else if
 
 	do 
 	{
@@ -112,35 +112,59 @@ int main()
 			case 1:
 				addMachine(&headPtr);
 				break;
+
 			case 2:
 				displayToScreen(headPtr);
 				break;
+
 			case 3:
-				displayMachineDetails(headPtr);
+				if (user == 1) // admin
+				{
+					displayMachineDetails(headPtr);
+				} // if
+
+				else if (user == 0) // guest
+				{
+					printf("Only admin have permission to display the machine!\n");
+				} // else if
 				break;
+				
 			case 4:
 				if (user == 1) // admin
 				{
 					updateMachine(headPtr);
 				} // if
 
-				else if (user == 0) // user
+				else if (user == 0) // guest
 				{
-					printf("Only admin have permission to edit the book!\n");
+					printf("Only admin have permission to edit the machine!\n");
 				} // else if
 				break;
+
 			case 5:
-				deleteMachine(headPtr);
+				if (user == 0) // guest
+				{
+					deleteMachine(headPtr);
+				} // if
+
+				else if (user == 1) // admin
+				{
+					printf("Only guest have permission to delete the machine!\n");
+				} // else if
 				break;
+
 			case 6:
 				generateStatistics(headPtr);
 				break;
+
 			case 7:
 				listMachines(headPtr);
 				break;
+
 			case -1:
 				printf("Exiting...\n");
 				break;
+
 			default:
 				printf("Invalid choice. Please try again.\n");
 		} // switch
@@ -151,6 +175,62 @@ int main()
 } // main
 
 // custom method
+int login(loginT* data)
+{
+	// variables
+	FILE* fp;
+	char adminPass[20];
+	char adminUsername[7];
+	int found = 0;
+	char ch;
+	int i = 0;
+
+	fp = fopen("login.txt", "r");
+
+	if (fp == NULL) // file no open
+	{
+		printf("login.txt cannot be opened for reading\n");
+	} // if
+
+	else
+	{
+		fscanf(fp, "%s %s", data->username, data->password);
+		fclose(fp);
+
+		// prompting the admin for the password
+		printf("Enter Admin Username\n");
+		scanf("%s", adminUsername);
+
+		printf("Enter Admin Password\n");
+
+		while ((ch = _getch()) != '\r') // until enter is pressed
+		{
+			if (ch != 13) // no enter key
+			{
+				adminPass[i] = ch; // store the character
+				i++;
+				printf("*"); // print asterisk
+			} // if
+		} // while
+
+		adminPass[i] = '\0';
+		printf("\n");
+
+		for (i = 0; i < 3; i++)
+		{
+			if (strcmp(data[i].username, adminUsername) == 0 && strcmp(data[i].password, adminPass) == 0) // username and password match
+			{
+				found = 1; // found
+				break;
+			} // if
+		} // for
+
+		return found; 
+
+		fclose(fp); // close login.txt
+	} // else
+} // login
+
 void addMachine(machineT** top) // adding machinery 
 {
 	// variables
@@ -830,6 +910,7 @@ void listMachines(machineT* top)
 	} // for
 	free(list); // free memory
 } // listMachines
+
 
 int menu()
 {
