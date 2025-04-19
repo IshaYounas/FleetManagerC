@@ -392,8 +392,8 @@ void displayToScreen(machineT* top) // displaying all the machinery
 		printf("Owner Name: %s\n", top->ownerName);
 		printf("Owner Email: %s\n", top->ownerEmail);
 		printf("Owner Phone: %s\n", top->ownerPhone);
-		printf("Machine Type: %d\n", getMachineType(top->machineType));
-		printf("Breakdown: %d\n", getBreakdownStatus(top->breakdown));	
+		printf("Machine Type: %s\n", getMachineType(top->machineType));
+		printf("Breakdown: %s\n", getBreakdownStatus(top->breakdown));	
 
 		top = top->NEXT; // next machine
 	} // while
@@ -423,8 +423,8 @@ void displayMachineDetails(machineT* top) // asking user for a specific machine 
 			printf("Owner Name: %s\n", top->ownerName);
 			printf("Owner Email: %s\n", top->ownerEmail);
 			printf("Owner Phone: %s\n", top->ownerPhone);
-			printf("Machine Type: %d\n", getMachineType(top->machineType));
-			printf("Breakdown: %d\n", getBreakdownStatus(top->breakdown));
+			printf("Machine Type: %s\n", getMachineType(top->machineType));
+			printf("Breakdown: %s\n", getBreakdownStatus(top->breakdown));
 
 			found = 1;
 			break;
@@ -541,6 +541,7 @@ void generateStatistics(machineT* top)
 	int totalRoller = 0;
 	int totalCrane = 0;
 	int totalMixer = 0;
+	int totalMachines = 0;
 
 	if (top == NULL)
 	{
@@ -552,97 +553,83 @@ void generateStatistics(machineT* top)
 
 	while (current != NULL)
 	{
+		totalMachines++; // total machines
+
 		switch (current->machineType)
 		{
 			case 1: // tractor
 				totalTractor++;
-				if (current->breakdown == 1) tractor[0]++;
-				else if (current->breakdown == 2) tractor[1]++;
-				else if (current->breakdown == 3) tractor[2]++;
-				else if (current->breakdown == 4) tractor[3]++;
+				tractor[current->breakdown - 1]++;
 				break;
 
 			case 2: // excavator
 				totalExcavator++;
-				if (current->breakdown == 1) excavator[0]++;
-				else if (current->breakdown == 2) excavator[1]++;
-				else if (current->breakdown == 3) excavator[2]++;
-				else if (current->breakdown == 4) excavator[3]++;
+				excavator[current->breakdown - 1]++;
 				break;
 
-			case 3: // roller
+			case 3:	// roller
 				totalRoller++;
-				if (current->breakdown == 1) roller[0]++;
-				else if (current->breakdown == 2) roller[1]++;
-				else if (current->breakdown == 3) roller[2]++;
-				else if (current->breakdown == 4) roller[3]++;
+				roller[current->breakdown - 1]++;
 				break;
 
 			case 4: // crane
 				totalCrane++;
-				if (current->breakdown == 1) crane[0]++;
-				else if (current->breakdown == 2) crane[1]++;
-				else if (current->breakdown == 3) crane[2]++;
-				else if (current->breakdown == 4) crane[3]++;
+				crane[current->breakdown - 1]++;
 				break;
 
 			case 5: // mixer
 				totalMixer++;
-				if (current->breakdown == 1) mixer[0]++;
-				else if (current->breakdown == 2) mixer[1]++;
-				else if (current->breakdown == 3) mixer[2]++;
-				else if (current->breakdown == 4) mixer[3]++;
+				mixer[current->breakdown - 1]++;
 				break;
 		} // switch
-		current = current->NEXT; 
 	} // while
 
-	// printing statistics
+	// printing statistics - percentages
 	printf("Statistics:\n");
 	
 	if (totalTractor > 0)
 	{
-		printf("Tractors:\n");
-		printf("Never: %d\n", tractor[0]);
-		printf("Less than three times: %d\n", tractor[1]);
-		printf("Less than five times: %d\n", tractor[2]);
-		printf("More than five times: %d\n\n", tractor[3]);
+		printf("Tractors - %d:\n", totalTractor);
+		printf("A. Never: %.2f%%\n", (float)tractor[0] / totalTractor * 100);
+		printf("B. Less than three times: %.2f%%\n", (float)tractor[1] / totalTractor * 100);
+		printf("C. Less than five times: %.2f%%\n", (float)tractor[2] / totalTractor * 100);
+		printf("D. More than five times: %.2f%%\n\n", (float)tractor[3] / totalTractor * 100);
 	} // if
 
 	if (totalExcavator > 0)
 	{
-		printf("Excavators:\n");
-		printf("Never: %d\n", excavator[0]);
-		printf("Less than three times: %d\n", excavator[1]);
-		printf("Less than five times: %d\n", excavator[2]);
-		printf("More than five times: %d\n\n", excavator[3]);
+		printf("Excavators - %d:\n", totalExcavator);
+		printf("A. Never: %.2f%%\n", (float)excavator[0] / totalExcavator * 100);
+		printf("B. Less than three times: %.2f%%\n", (float)excavator[1] / totalExcavator * 100);
+		printf("C. Less than five times: %.2f%%\n", (float)excavator[2] / totalExcavator * 100);
+		printf("D. More than five times: %.2f%%\n\n", (float)excavator[3] / totalExcavator * 100);
 	} // if
 
 	if (totalRoller > 0)
 	{
-		printf("Rollers:\n");
-		printf("Never: %d\n", roller[0]);
-		printf("Less than three times: %d\n", roller[1]);
-		printf("Less than five times: %d\n", roller[2]);
-		printf("More than five times: %d\n\n", roller[3]);
+		printf("Rollers - %d:\n", totalRoller);
+		printf("A. Never: %.2f%%\n", (float)roller[0] / totalRoller * 100);
+		printf("B. Less than three times: %.2f%%\n", (float)roller[1] / totalRoller * 100);
+		printf("C. Less than five times: %.2f%%\n", (float)roller[2] / totalRoller * 100);
+		printf("D. More than five times: %.2f%%\n\n", (float)roller[3] / totalRoller * 100);
 	} // if
 
 	if (totalCrane > 0)
 	{
-		printf("Cranes:\n");
-		printf("Never: %d\n", crane[0]);
-		printf("Less than three times: %d\n", crane[1]);
-		printf("Less than five times: %d\n", crane[2]);
-		printf("More than five times: %d\n\n", crane[3]);
+		printf("Cranes - %d:\n", totalCrane);
+		printf("A. Never: %.2f%%\n", (float)crane[0] / totalCrane * 100);
+		printf("B. Less than three times: %.2f%%\n", (float)crane[1] / totalCrane * 100);
+		printf("C. Less than five times: %.2f%%\n", (float)crane[2] / totalCrane * 100);
+		printf("D. More than five times: %.2f%%\n\n", (float)crane[3] / totalCrane * 100);
 	} // if
 
 	if (totalMixer > 0)
 	{
-		printf("Mixers:\n");
-		printf("Never: %d\n", mixer[0]);
-		printf("Less than three times: %d\n", mixer[1]);
-		printf("Less than five times: %d\n", mixer[2]);
-		printf("More than five times: %d\n\n", mixer[3]);
+		printf("Mixers - %d:\n", totalMixer);
+		printf("A. Never: %.2f%%\n", (float)mixer[0] / totalMixer * 100);
+		printf("B. Less than three times: %.2f%%\n", (float)mixer[1] / totalMixer * 100);
+		printf("C. Less than five times: %.2f%%\n", (float)mixer[2] / totalMixer * 100);
+		printf("D. More than five times: %.2f%%\n\n", (float)mixer[3] / totalMixer * 100);
 	} // if
 } // genearteStatistics
 
@@ -699,47 +686,47 @@ void saveToFile(machineT* top)
 		fprintf(fp, "\nStatistics:\n");
 		if (totalTractor > 0)
 		{
-			fprintf(fp, "Tractors:\n");
-			fprintf(fp, "Never: %d\n", tractor[0]);
-			fprintf(fp, "Less than three times: %d\n", tractor[1]);
-			fprintf(fp, "Less than five times: %d\n", tractor[2]);
-			fprintf(fp, "More than five times: %d\n\n", tractor[3]);
+			fprintf(fp, "Tractors - %d:\n", totalTractor);
+			fprintf(fp, "A. Never: %.2f%%\n", (float)tractor[0] / totalTractor * 100);
+			fprintf(fp, "B. Less than three times: %.2f%%\n", (float)tractor[1] / totalTractor * 100);
+			fprintf(fp, "C. Less than five times: %.2f%%\n", (float)tractor[2] / totalTractor * 100);
+			fprintf(fp, "D. More than five times: %.2f%%\n\n", (float)tractor[3] / totalTractor * 100);
 		} // if
 
 		if (totalExcavator > 0)
 		{
-			fprintf(fp, "Excavators:\n");
-			fprintf(fp, "Never: %d\n", excavator[0]);
-			fprintf(fp, "Less than three times: %d\n", excavator[1]);
-			fprintf(fp, "Less than five times: %d\n", excavator[2]);
-			fprintf(fp, "More than five times: %d\n\n", excavator[3]);
+			fprintf(fp, "Excavators - %d:\n", totalExcavator);
+			fprintf(fp, "A. Never: %.2f%%\n", (float)excavator[0] / totalExcavator * 100);
+			fprintf(fp, "B. Less than three times: %.2f%%\n", (float)excavator[1] / totalExcavator * 100);
+			fprintf(fp, "C. Less than five times: %.2f%%\n", (float)excavator[2] / totalExcavator * 100);
+			fprintf(fp, "D. More than five times: %.2f%%\n\n", (float)excavator[3] / totalExcavator * 100);
 		} // if
 
 		if (totalRoller > 0)
 		{
-			fprintf(fp, "Rollers:\n");
-			fprintf(fp, "Never: %d\n", roller[0]);
-			fprintf(fp, "Less than three times: %d\n", roller[1]);
-			fprintf(fp, "Less than five times: %d\n", roller[2]);
-			fprintf(fp, "More than five times: %d\n\n", roller[3]);
+			fprintf("Rollers - %d:\n", totalRoller);
+			fprintf(fp, "A. Never: %.2f%%\n", (float)roller[0] / totalRoller * 100);
+			fprintf(fp, "B. Less than three times: %.2f%%\n", (float)roller[1] / totalRoller * 100);
+			fprintf(fp, "C. Less than five times: %.2f%%\n", (float)roller[2] / totalRoller * 100);
+			fprintf(fp, "D. More than five times: %.2f%%\n\n", (float)roller[3] / totalRoller * 100);
 		} // if
 
 		if (totalCrane > 0)
 		{
-			fprintf(fp, "Cranes:\n");
-			fprintf(fp, "Never: %d\n", crane[0]);
-			fprintf(fp, "Less than three times: %d\n", crane[1]);
-			fprintf(fp, "Less than five times: %d\n", crane[2]);
-			fprintf(fp, "More than five times: %d\n\n", crane[3]);
+			fprintf(fp, "Cranes - %d:\n", totalCrane);
+			fprintf(fp, "A. Never: %.2f%%\n", (float)crane[0] / totalCrane * 100);
+			fprintf(fp, "B. Less than three times: %.2f%%\n", (float)crane[1] / totalCrane * 100);
+			fprintf(fp, "C. Less than five times: %.2f%%\n", (float)crane[2] / totalCrane * 100);
+			fprintf(fp, "D. More than five times: %.2f%%\n\n", (float)crane[3] / totalCrane * 100);
 		} // if
 
 		if (totalMixer > 0)
 		{
-			fprintf(fp, "Mixers:\n");
-			fprintf(fp, "Never: %d\n", mixer[0]);
-			fprintf(fp, "Less than three times: %d\n", mixer[1]);
-			fprintf(fp, "Less than five times: %d\n", mixer[2]);
-			fprintf(fp, "More than five times: %d\n\n", mixer[3]);
+			fprintf(fp, "Mixers - %d:\n", totalMixer);
+			fprintf(fp, "A. Never: %.2f%%\n", (float)mixer[0] / totalMixer * 100);
+			fprintf(fp, "B. Less than three times: %.2f%%\n", (float)mixer[1] / totalMixer * 100);
+			fprintf(fp, "C. Less than five times: %.2f%%\n", (float)mixer[2] / totalMixer * 100);
+			fprintf(fp, "D. More than five times: %.2f%%\n\n", (float)mixer[3] / totalMixer * 100);
 		} // if
 
 		fclose(fp); // close file
@@ -811,8 +798,8 @@ void listMachines(machineT* top)
 		printf("Owner Name: %s\n", list[i].ownerName);
 		printf("Owner Email: %s\n", list[i].ownerEmail);
 		printf("Owner Phone: %s\n", list[i].ownerPhone);
-		printf("Machine Type: %d\n", getMachineType(list[i].machineType));
-		printf("Breakdown: %d\n", getBreakdownStatus(list[i].breakdown));
+		printf("Machine Type: %s\n", getMachineType(list[i].machineType));
+		printf("Breakdown: %s\n", getBreakdownStatus(list[i].breakdown));
 	} // for
 	free(list); // free memory
 } // listMachines
@@ -849,7 +836,6 @@ void loadFleetFile(machineT** top)
 	int numInputs;
 	machineT* current;
 
-	printf("P1\n");
 	fp = fopen("fleet.txt", "r"); // read mode
 
 	if (fp == NULL) // file can't open
@@ -859,7 +845,6 @@ void loadFleetFile(machineT** top)
 
 	while (!feof(fp))
 	{
-		printf("P3\n");
 		current = (machineT*)malloc(sizeof(machineT)); // allocating memory
 	
 		if (current == NULL)
@@ -868,13 +853,10 @@ void loadFleetFile(machineT** top)
 			return;
 		} // if
 
-		printf("P4\n");
 		numInputs = fscanf(fp, "%s %s %s %d %f %f %d %d %s %s %s %d %d\n", current->chassisNum, current->make, current->model, &current->year, &current->cost, &current->valuation, &current->mileage, &current->nextServiceMileage, current->ownerName, current->ownerEmail, current->ownerPhone, &current->machineType, &current->breakdown);
 
-		printf("P5\n");
 		if (numInputs == 13)
 		{
-			printf("P6\n");
 			printf("Chassis Number: %s\n", current->chassisNum);
 			printf("Make: %s\n", current->make);
 			printf("Model: %s\n", current->model);
@@ -891,16 +873,31 @@ void loadFleetFile(machineT** top)
 
 			current->NEXT = *top; 
 			*top = current; 
+
+			if (*top == NULL || strcmp(current->chassisNum, (*top)->chassisNum) < 0)
+			{
+				current->NEXT = *top;
+				*top = current;
+			} // if		
+
+			else
+			{
+				machineT* prev = *top;
+				while (prev->NEXT != NULL && strcmp(prev->NEXT->chassisNum, current->chassisNum) < 0)
+				{
+					prev = prev->NEXT; // next machine
+				} // while
+				current->NEXT = prev->NEXT;
+				prev->NEXT = current;
+			} // else
 		} // if
 
 		else
 		{
-			printf("P7\n");
 			printf("Error reading data from file\n");
 			free(current); // free memory
+			break;
 		} // else
-
-		printf("P8\n");
 	}// while
 	fclose(fp); // closing the file
 } // loadFleetFile
