@@ -48,8 +48,34 @@ void generateStatistics(machineT* top); // option 6
 void saveToFile(machineT* top); 
 void listMachines(machineT* top); // option 7
 void saveToFleetFile(machineT* top);
+void loadFleetFile(machineT** top);
 int login(loginT data[]);
 int menu();
+
+const char* getMachineType(int type)
+{
+	switch (type)
+	{
+		case 1: return "Tractor";
+		case 2: return "Excavator";
+		case 3: return "Roller";
+		case 4: return "Crane";
+		case 5: return "Mixer";
+		default: return "Unknown";
+	} // switch
+} // getMachineType
+
+const char* getBreakdownStatus(int breakdown)
+{
+	switch (breakdown)
+	{
+		case 1: return "Never";
+		case 2: return "Less than three times";
+		case 3: return "Less than five times";
+		case 4: return "More than five times";
+		default: return "Unknown";
+	} // switch
+} // getBreakdownStatus
 
 int main()
 {
@@ -104,6 +130,8 @@ int main()
 	{
 		printf("User is guest\n");
 	} // else if
+
+	loadFleetFile(&headPtr); // loading the fleet file
 
 	do 
 	{
@@ -161,6 +189,11 @@ int main()
 			case 7:
 				listMachines(headPtr);
 				break;
+
+			case -1:
+				printf("Exiting the program...\n");
+				break;
+
 			default:
 				printf("Invalid choice. Please try again.\n");
 		} // switch
@@ -304,59 +337,11 @@ void addMachine(machineT** top) // adding machinery
 
 	printf("Enter machine type (1 for Tractor, 2 for Excavator, 3 for Roller, 4 for Crane, 5 for Mixer): ");
 	scanf("%d", &newMachine->machineType);
-
-	switch (newMachine->machineType)
-	{
-		case 1:
-			printf("Tractor\n");
-			break;
-
-		case 2:
-			printf("Excavator\n");
-			break;
-
-		case 3:
-			printf("Roller\n");
-			break;
-
-		case 4:
-			printf("Crane\n");
-			break;
-
-		case 5:
-			printf("Mixer\n");
-			break;
-
-		default:
-			printf("Invalid machine type\n");
-			break;
-	} // switch
+	printf("Machine Type: %s\n", getMachineType(newMachine->machineType));
 
 	printf("Enter breakdown (1 for Never, 2 for Less than three times, 3 for Less than five times, 4 for More than five times): ");
 	scanf("%d", &newMachine->breakdown);
-
-	switch (newMachine->breakdown)
-	{
-		case 1:
-			printf("Breakdown: Never\n");
-			break;
-
-		case 2:
-			printf("Breakdown: Less than three times\n");
-			break;
-
-		case 3:
-			printf("Breakdown: Less than five times\n");
-			break;
-
-		case 4:
-			printf("Breakdown: More than five times\n");
-			break;
-
-		default:
-			printf("Invalid breakdown\n");
-			break;
-	} // switch
+	printf("Breakdown: %s\n", getBreakdownStatus(newMachine->breakdown));
 
 	newMachine->NEXT = NULL; 
 
@@ -407,8 +392,8 @@ void displayToScreen(machineT* top) // displaying all the machinery
 		printf("Owner Name: %s\n", top->ownerName);
 		printf("Owner Email: %s\n", top->ownerEmail);
 		printf("Owner Phone: %s\n", top->ownerPhone);
-		printf("Machine Type: %d\n", top->machineType);
-		printf("Breakdown: %d\n", top->breakdown);	
+		printf("Machine Type: %d\n", getMachineType(top->machineType));
+		printf("Breakdown: %d\n", getBreakdownStatus(top->breakdown));	
 
 		top = top->NEXT; // next machine
 	} // while
@@ -438,8 +423,8 @@ void displayMachineDetails(machineT* top) // asking user for a specific machine 
 			printf("Owner Name: %s\n", top->ownerName);
 			printf("Owner Email: %s\n", top->ownerEmail);
 			printf("Owner Phone: %s\n", top->ownerPhone);
-			printf("Machine Type: %d\n", top->machineType);
-			printf("Breakdown: %d\n\n", top->breakdown);
+			printf("Machine Type: %d\n", getMachineType(top->machineType));
+			printf("Breakdown: %d\n", getBreakdownStatus(top->breakdown));
 
 			found = 1;
 			break;
@@ -492,59 +477,11 @@ void updateMachine(machineT* top)
 
 			printf("Enter new machine type (1 for Tractor, 2 for Excavator, 3 for Roller, 4 for Crane, 5 for Mixer): ");
 			scanf("%d", &current->machineType);
-
-			switch (current->machineType)
-			{
-				case 1:
-					printf("Tractor\n");
-					break;
-
-				case 2:
-					printf("Excavator\n");
-					break;
-
-				case 3:
-					printf("Roller\n");
-					break;
-
-				case 4:
-					printf("Crane\n");
-					break;
-
-				case 5:
-					printf("Mixer\n");
-					break;
-
-				default:
-					printf("Invalid machine type\n");
-					break;
-			} // switch
+			printf("Machine Type: %d\n", getMachineType(current->machineType));
 
 			printf("Enter new breakdown (1 for Never, 2 for Less than three times, 3 for Less than five times, 4 for More than five times): ");
 			scanf("%d", &current->breakdown);
-
-			switch (current->breakdown)
-			{
-				case 1:
-					printf("Breakdown: Never\n");
-					break;
-
-				case 2:
-					printf("Breakdown: Less than three times\n");
-					break;
-
-				case 3:
-					printf("Breakdown: Less than five times\n");
-					break;
-
-				case 4:
-					printf("Breakdown: More than five times\n");
-					break;
-
-				default:
-					printf("Invalid breakdown\n");
-					break;
-			} // switch
+			printf("Breakdown: %d\n", getBreakdownStatus(current->breakdown));
 
 			printf("Machine updated successfully\n\n");
 			return;
@@ -753,36 +690,9 @@ void saveToFile(machineT* top)
 			fprintf(fp, "Owner Name: %s\n", current->ownerName);
 			fprintf(fp, "Owner Email: %s\n", current->ownerEmail);
 			fprintf(fp, "Owner Phone: %s\n", current->ownerPhone);
-			fprintf(fp, "Machine Type: %d\n", current->machineType);
-			fprintf(fp, "Breakdown: %d\n\n", current->breakdown);
+			fprintf(fp, "Machine Type: %s\n", getMachineType(current->machineType));
+			fprintf(fp, "Breakdown: %s\n\n", getBreakdownStatus(current->breakdown));
 
-			switch (current->machineType)
-			{
-				case 1:
-					totalTractor++;
-					tractor[current->breakdown - 1]++;
-					break;
-
-				case 2:
-					totalExcavator++;
-					excavator[current->breakdown - 1]++;
-					break;
-
-				case 3:
-					totalRoller++;
-					roller[current->breakdown - 1]++;
-					break;
-
-				case 4:
-					totalCrane++;
-					crane[current->breakdown - 1]++;
-					break;
-
-				case 5:
-					totalMixer++;
-					mixer[current->breakdown - 1]++;
-					break;
-			} // switch
 			current = current->NEXT; 
 		} // while
 
@@ -833,7 +743,7 @@ void saveToFile(machineT* top)
 		} // if
 
 		fclose(fp); // close file
-		printf("Data saved to report.txt\n\n");
+		printf("Data saved to report.txt\n");
 	} // else
 } // saveToFile
 
@@ -901,8 +811,8 @@ void listMachines(machineT* top)
 		printf("Owner Name: %s\n", list[i].ownerName);
 		printf("Owner Email: %s\n", list[i].ownerEmail);
 		printf("Owner Phone: %s\n", list[i].ownerPhone);
-		printf("Machine Type: %d\n", list[i].machineType);
-		printf("Breakdown: %d\n\n", list[i].breakdown);
+		printf("Machine Type: %d\n", getMachineType(list[i].machineType));
+		printf("Breakdown: %d\n", getBreakdownStatus(list[i].breakdown));
 	} // for
 	free(list); // free memory
 } // listMachines
@@ -919,18 +829,81 @@ void saveToFleetFile(machineT* top)
 		return;
 	} // if
 
-	else
+	
+	machineT* current = top;
+	while (current != NULL)
 	{
-		machineT* current = top;
-		while (current != NULL)
-		{
-			fprintf(fp, "%s, %s, %s, %d, %.2f, %.2f, %d, %d, %s, %s, %s, %d, %d\n", current->chassisNum, current->make, current->model, current->year, current->cost, current->valuation, current->mileage, current->nextServiceMileage, current->ownerName, current->ownerEmail, current->ownerPhone, current->machineType, current->breakdown);
-			current = current->NEXT; // next machine
-		} // while
-		fclose(fp); // close file
-		printf("Data saved to fleet.txt\n");
-	} // else
+		// writing to the file
+		fprintf(fp, "%s %s %s %d %.2f %.2f %d %d %s %s %s %d %d\n", current->chassisNum, current->make, current->model, current->year, current->cost, current->valuation, current->mileage, current->nextServiceMileage, current->ownerName, current->ownerEmail, current->ownerPhone, current->machineType, current->breakdown);
+		
+		current = current->NEXT; // next machine
+	} // while
+	fclose(fp); // close file
+	printf("Data saved to fleet.txt\n");
 } // saveToFleetFile
+
+void loadFleetFile(machineT** top)
+{
+	// variables
+	FILE* fp;
+	int numInputs;
+	machineT* current;
+
+	printf("P1\n");
+	fp = fopen("fleet.txt", "r"); // read mode
+
+	if (fp == NULL) // file can't open
+	{
+		printf("fleet.txt cannot be opened for reading\n");
+	} // if
+
+	while (!feof(fp))
+	{
+		printf("P3\n");
+		current = (machineT*)malloc(sizeof(machineT)); // allocating memory
+	
+		if (current == NULL)
+		{
+			printf("Memory allocation failed\n");
+			return;
+		} // if
+
+		printf("P4\n");
+		numInputs = fscanf(fp, "%s %s %s %d %f %f %d %d %s %s %s %d %d\n", current->chassisNum, current->make, current->model, &current->year, &current->cost, &current->valuation, &current->mileage, &current->nextServiceMileage, current->ownerName, current->ownerEmail, current->ownerPhone, &current->machineType, &current->breakdown);
+
+		printf("P5\n");
+		if (numInputs == 13)
+		{
+			printf("P6\n");
+			printf("Chassis Number: %s\n", current->chassisNum);
+			printf("Make: %s\n", current->make);
+			printf("Model: %s\n", current->model);
+			printf("Year: %d\n", current->year);
+			printf("Cost: %.2f\n", current->cost);
+			printf("Valuation: %.2f\n", current->valuation);
+			printf("Mileage: %d\n", current->mileage);
+			printf("Next Service Mileage: %d\n", current->nextServiceMileage);
+			printf("Owner Name: %s\n", current->ownerName);
+			printf("Owner Email: %s\n", current->ownerEmail);
+			printf("Owner Phone: %s\n", current->ownerPhone);
+			printf("Machine Type: %s\n", getMachineType(current->machineType));
+			printf("Breakdown: %s\n", getBreakdownStatus(current->breakdown));
+
+			current->NEXT = *top; 
+			*top = current; 
+		} // if
+
+		else
+		{
+			printf("P7\n");
+			printf("Error reading data from file\n");
+			free(current); // free memory
+		} // else
+
+		printf("P8\n");
+	}// while
+	fclose(fp); // closing the file
+} // loadFleetFile
 
 int menu()
 {

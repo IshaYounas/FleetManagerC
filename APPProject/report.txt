@@ -1,23 +1,31 @@
 Fleet Management Report
-Chassis Number: 25ab26
-Make: timer
-Model: pol52
-Year: 2013
-Cost: 200000.00
-Valuation: 100000.00
-Mileage: 780
-Next Service Mileage: 800
-Owner Name: sarah
-Owner Email: sarah@manager.com
-Owner Phone: 7878787878
-Machine Type: 2
-Breakdown: 4
+Chassis Number: CAT56
+Make: BIKER
+Model: S4F
+Year: 2025
+Cost: 2000000.00
+Valuation: 1000000.00
+Mileage: 5000
+Next Service Mileage: 5500
+Owner Name: BOB
+Owner Email: bob@gmail.com
+Owner Phone: Tractor
+Machine Type: Unknown
+Breakdown: Unknown
+
+Chassis Number: TIGER1
+Make: MERCEDES
+Model: GWAGON
+Year: 2025
+Cost: 10000000000.00
+Valuation: 20000000000.00
+Mileage: 500
+Next Service Mileage: 1000
+Owner Name: ALICE
+Owner Email: alice@mercedes.com
+Owner Phone: 123456789
+Machine Type: Mixer
+Breakdown: Never
 
 
 Statistics:
-Excavators:
-Never: 0
-Less than three times: 0
-Less than five times: 0
-More than five times: 1
-
