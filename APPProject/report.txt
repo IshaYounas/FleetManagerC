@@ -1,17 +1,17 @@
-Fleet Manager Report
-Chassis Number: 239
-Make: bmw
-Model: x5
-Year: 2025
-Cost: 10973.00
-Valuation: 20000.00
-Mileage: 200
-Next Service Mileage: 250
-Owner Name: isha
-Owner Email: isha@cprogramming.com
-Owner Phone: 5432445678
+Fleet Management Report
+Chassis Number: 25ab26
+Make: timer
+Model: pol52
+Year: 2013
+Cost: 200000.00
+Valuation: 100000.00
+Mileage: 780
+Next Service Mileage: 800
+Owner Name: sarah
+Owner Email: sarah@manager.com
+Owner Phone: 7878787878
 Machine Type: 2
-Breakdown: 5
+Breakdown: 4
 
 
 Statistics:
@@ -19,5 +19,5 @@ Excavators:
 Never: 0
 Less than three times: 0
 Less than five times: 0
-More than five times: 0
+More than five times: 1
 

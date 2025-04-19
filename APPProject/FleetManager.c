@@ -47,7 +47,8 @@ void deleteMachine(machineT** top); // option 5
 void generateStatistics(machineT* top); // option 6
 void saveToFile(machineT* top); 
 void listMachines(machineT* top); // option 7
-int login(loginT* data);
+void saveToFleetFile(machineT* top);
+int login(loginT data[]);
 int menu();
 
 int main()
@@ -160,27 +161,24 @@ int main()
 			case 7:
 				listMachines(headPtr);
 				break;
-
-			case -1:
-				printf("Exiting...\n");
-				break;
-
 			default:
 				printf("Invalid choice. Please try again.\n");
 		} // switch
+
 		// keep repeating unit option is not -1
 	} while (option != -1); // do-while
 	
 	saveToFile(headPtr); // calling the save method
+	saveToFleetFile(headPtr); 
 } // main
 
 // custom method
-int login(loginT* data)
+int login(loginT data[])
 {
 	// variables
 	FILE* fp;
 	char adminPass[20];
-	char adminUsername[7];
+	char adminUsername[20];
 	int found = 0;
 	char ch;
 	int i = 0;
@@ -224,10 +222,8 @@ int login(loginT* data)
 				break;
 			} // if
 		} // for
-
-		return found; 
-
 		fclose(fp); // close login.txt
+		return found; 
 	} // else
 } // login
 
@@ -396,7 +392,7 @@ void displayToScreen(machineT* top) // displaying all the machinery
 		return;
 	} // if
 
-	printf("Machines in the fleet:\n");
+	printf("\nMachines in the fleet:\n");
 	
 	while (top != NULL)
 	{
@@ -743,7 +739,7 @@ void saveToFile(machineT* top)
 	else // file open
 	{
 		// writing to the file
-		fprintf(fp, "Fleet Manager Report\n");
+		fprintf(fp, "Fleet Management Report\n");
 		while (current != NULL)
 		{
 			fprintf(fp, "Chassis Number: %s\n", current->chassisNum);
@@ -911,6 +907,30 @@ void listMachines(machineT* top)
 	free(list); // free memory
 } // listMachines
 
+void saveToFleetFile(machineT* top)
+{
+	// variables
+	FILE* fp;
+	fp = fopen("fleet.txt", "w"); // write mode
+
+	if (fp == NULL) // file no open
+	{
+		printf("fleet.txt cannot be opened for writing\n");
+		return;
+	} // if
+
+	else
+	{
+		machineT* current = top;
+		while (current != NULL)
+		{
+			fprintf(fp, "%s, %s, %s, %d, %.2f, %.2f, %d, %d, %s, %s, %s, %d, %d\n", current->chassisNum, current->make, current->model, current->year, current->cost, current->valuation, current->mileage, current->nextServiceMileage, current->ownerName, current->ownerEmail, current->ownerPhone, current->machineType, current->breakdown);
+			current = current->NEXT; // next machine
+		} // while
+		fclose(fp); // close file
+		printf("Data saved to fleet.txt\n");
+	} // else
+} // saveToFleetFile
 
 int menu()
 {
@@ -921,8 +941,7 @@ int menu()
 	printf("4. Update machine\n");
 	printf("5. Delete Machine\n");
 	printf("6. Generate Statistics\n");
-	printf("7. Save to File\n");
-	printf("8. List Machines in order of valuation\n");
+	printf("7. List Machines in order of valuation\n");
 	printf("-1. Exit\n");
 	printf("Enter your choice: ");
 	scanf("%d", &choice);
