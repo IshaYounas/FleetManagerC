@@ -943,6 +943,7 @@ void loadFleetFile(machineT** top)
 		if (current == NULL)
 		{
 			printf("Memory allocation failed\n");
+			fclose(fp);
 			return;
 		} // if
 
@@ -964,8 +965,9 @@ void loadFleetFile(machineT** top)
 			printf("Machine Type: %s\n", getMachineType(current->machineType));
 			printf("Breakdown: %s\n", getBreakdownStatus(current->breakdown));
 
+			printf("\n");
+
 			current->NEXT = *top; 
-			*top = current; 
 
 			if (*top == NULL || strcmp(current->chassisNum, (*top)->chassisNum) < 0)
 			{
