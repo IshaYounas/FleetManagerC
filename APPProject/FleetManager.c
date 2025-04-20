@@ -169,18 +169,11 @@ int main()
 				break;
 
 			case 5:
-				if (user == 0) // guest
-				{
-					deleteMachine(headPtr);
-				} // if
-
-				else if (user == 1) // admin
-				{
-					printf("Only guest have permission to delete the machine!\n");
-				} // else if
+				deleteMachine(headPtr);
 				break;
 
 			case 6:
+				printf("Generating statistics...\n");
 				generateStatistics(headPtr);
 				break;
 
@@ -315,7 +308,7 @@ void addMachine(machineT** top) // adding machinery
 	printf("Enter cost (greater than 0): ");
 	scanf("%f", &newMachine->cost);
 
-	while (newMachine->cost > 0) // checking if the cost is valid
+	while (newMachine->cost < 0) // checking if the cost is valid
 	{
 		printf("Invalid cost. Please enter a valid cost: ");
 		scanf("%f", &newMachine->cost);
@@ -324,7 +317,7 @@ void addMachine(machineT** top) // adding machinery
 	printf("Enter valuation (greater than 0): ");
 	scanf("%f", &newMachine->valuation);
 
-	while (newMachine->valuation > 0) // checking if the valuation is valid
+	while (newMachine->valuation < 0) // checking if the valuation is valid
 	{
 		printf("Invalid valuation. Please enter a valid valuation: ");
 		scanf("%f", &newMachine->valuation);
@@ -501,7 +494,7 @@ void updateMachine(machineT* top)
 			printf("Enter cost (greater than 0): ");
 			scanf("%f", &current->cost);
 
-			while (current->cost > 0) // checking if the cost is valid
+			while (current->cost < 0) // checking if the cost is valid
 			{
 				printf("Invalid cost. Please enter a valid cost: ");
 				scanf("%f", &current->cost);
@@ -510,7 +503,7 @@ void updateMachine(machineT* top)
 			printf("Enter valuation (greater than 0): ");
 			scanf("%f", &current->valuation);
 
-			while (current->valuation > 0) // checking if the valuation is valid
+			while (current->valuation < 0) // checking if the valuation is valid
 			{
 				printf("Invalid valuation. Please enter a valid valuation: ");
 				scanf("%f", &current->valuation);
@@ -522,8 +515,6 @@ void updateMachine(machineT* top)
 			scanf("%d", &current->nextServiceMileage);
 			printf("Enter new owner name: ");
 			scanf("%s", current->ownerName);
-			printf("Enter new owner email: ");
-			scanf("%s", current->ownerEmail);
 
 			// validating the email
 			int validEmail = 0;
@@ -626,13 +617,6 @@ void generateStatistics(machineT* top)
 		printf("No machines to generate statistics\n\n");
 		return;
 	} // if
-
-	if (top == NULL)
-	{
-		printf("Error generating statistics\n\n");
-		return;
-	} // if
-
 	current = top;
 
 	while (current != NULL)
@@ -666,56 +650,57 @@ void generateStatistics(machineT* top)
 				mixer[current->breakdown - 1]++;
 				break;
 		} // switch
+		current = current->NEXT; 
 	} // while
 
 	// printing statistics - percentages
-	printf("Statistics:\n");
+	printf("\nStatistics:\n");
 	
 	if (totalTractor > 0)
 	{
-		printf("Tractors - %d:\n", totalTractor);
-		printf("A. Never: %.2f%%\n", (float)tractor[0] / totalTractor * 100);
-		printf("B. Less than three times: %.2f%%\n", (float)tractor[1] / totalTractor * 100);
-		printf("C. Less than five times: %.2f%%\n", (float)tractor[2] / totalTractor * 100);
-		printf("D. More than five times: %.2f%%\n\n", (float)tractor[3] / totalTractor * 100);
+		printf("Tractors: %d:\n", totalTractor);
+		printf("A. Never: %d: %.2f%%\n", tractor[0], (float)tractor[0] / totalTractor * 100);
+		printf("B. Less than three times: %d: %.2f%%\n", tractor[1], (float)tractor[1] / totalTractor * 100);
+		printf("C. Less than five times: %d: %.2f%%\n", tractor[2], (float)tractor[2] / totalTractor * 100);
+		printf("D. More than five times: %d: %.2f%%\n\n", tractor[3], (float)tractor[3] / totalTractor * 100);
 	} // if
 
 	if (totalExcavator > 0)
 	{
-		printf("Excavators - %d:\n", totalExcavator);
-		printf("A. Never: %.2f%%\n", (float)excavator[0] / totalExcavator * 100);
-		printf("B. Less than three times: %.2f%%\n", (float)excavator[1] / totalExcavator * 100);
-		printf("C. Less than five times: %.2f%%\n", (float)excavator[2] / totalExcavator * 100);
-		printf("D. More than five times: %.2f%%\n\n", (float)excavator[3] / totalExcavator * 100);
+		printf("Excavators: %d:\n", totalExcavator);
+		printf("A. Never: %d: %.2f%%\n", excavator[0], (float)excavator[0] / totalExcavator * 100);
+		printf("B. Less than three times: %d: %.2f%%\n", excavator[1], (float)excavator[1] / totalExcavator * 100);
+		printf("C. Less than five times: %d: %.2f%%\n", excavator[2], (float)excavator[2] / totalExcavator * 100);
+		printf("D. More than five times: %d: %.2f%%\n\n", excavator[3], (float)excavator[3] / totalExcavator * 100);
 	} // if
 
 	if (totalRoller > 0)
 	{
-		printf("Rollers - %d:\n", totalRoller);
-		printf("A. Never: %.2f%%\n", (float)roller[0] / totalRoller * 100);
-		printf("B. Less than three times: %.2f%%\n", (float)roller[1] / totalRoller * 100);
-		printf("C. Less than five times: %.2f%%\n", (float)roller[2] / totalRoller * 100);
-		printf("D. More than five times: %.2f%%\n\n", (float)roller[3] / totalRoller * 100);
+		printf("Rollers: %d:\n", totalRoller);
+		printf("A. Never: %d: %.2f%%\n", roller[0], (float)roller[0] / totalRoller * 100);
+		printf("B. Less than three times: %d: %.2f%%\n", roller[1], (float)roller[1] / totalRoller * 100);
+		printf("C. Less than five times: %d: %.2f%%\n", roller[2], (float)roller[2] / totalRoller * 100);
+		printf("D. More than five times: %d: %.2f%%\n\n", roller[3], (float)roller[3] / totalRoller * 100);
 	} // if
 
 	if (totalCrane > 0)
 	{
-		printf("Cranes - %d:\n", totalCrane);
-		printf("A. Never: %.2f%%\n", (float)crane[0] / totalCrane * 100);
-		printf("B. Less than three times: %.2f%%\n", (float)crane[1] / totalCrane * 100);
-		printf("C. Less than five times: %.2f%%\n", (float)crane[2] / totalCrane * 100);
-		printf("D. More than five times: %.2f%%\n\n", (float)crane[3] / totalCrane * 100);
+		printf("Cranes: %d:\n", totalCrane);
+		printf("A. Never: %d: %.2f%%\n", crane[0], (float)crane[0] / totalCrane * 100);
+		printf("B. Less than three times: %d: %.2f%%\n", crane[1], (float)crane[1] / totalCrane * 100);
+		printf("C. Less than five times: %d: %.2f%%\n", crane[2], (float)crane[2] / totalCrane * 100);
+		printf("D. More than five times: %d: %.2f%%\n\n", crane[3], (float)crane[3] / totalCrane * 100);
 	} // if
 
 	if (totalMixer > 0)
 	{
-		printf("Mixers - %d:\n", totalMixer);
-		printf("A. Never: %.2f%%\n", (float)mixer[0] / totalMixer * 100);
-		printf("B. Less than three times: %.2f%%\n", (float)mixer[1] / totalMixer * 100);
-		printf("C. Less than five times: %.2f%%\n", (float)mixer[2] / totalMixer * 100);
-		printf("D. More than five times: %.2f%%\n\n", (float)mixer[3] / totalMixer * 100);
+		printf("Mixers: %d:\n", totalMixer);
+		printf("A. Never: %d: %.2f%%\n", mixer[0], (float)mixer[0] / totalMixer * 100);
+		printf("B. Less than three times: %d: %.2f%%\n", mixer[1], (float)mixer[1] / totalMixer * 100);
+		printf("C. Less than five times: %d: %.2f%%\n", mixer[2], (float)mixer[2] / totalMixer * 100);
+		printf("D. More than five times: %d: %.2f%%\n\n", mixer[3], (float)mixer[3] / totalMixer * 100);
 	} // if
-} // genearteStatistics
+} // generateStatistics
 
 void saveToFile(machineT* top)
 {
@@ -849,12 +834,12 @@ void saveToFile(machineT* top)
 void listMachines(machineT* top)
 {
 	// variables
-	machineT tempMachine;
-	machineT* index;
-	machineT* current;
+	machineT* temp;
+	machineT* current = top;
 	int count = 0;
 	int i;
 	int j;
+	machineT* machines[100];
 
 	if (top == NULL)
 	{
@@ -862,24 +847,29 @@ void listMachines(machineT* top)
 		return;
 	} // if
 
-	for (current = top; current != NULL; current = current->NEXT)
+	while (current != NULL && count < 100)
 	{
-		for (index = current->NEXT; index != NULL; index = index->NEXT)
+		machines[count++] = current;
+		current = current->NEXT;
+	} // while
+
+	for (i = 0; i < count -1; i++)
+	{
+		for (j = 0; j < count-i-1; j++)
 		{
-			if (current->valuation > index->valuation)
+			if (machines[j]->valuation > machines[j+1]->valuation)
 			{
-				// swapping the data of current and index
-				tempMachine = *current;
-				*current = *index;
-				*index = tempMachine;
+				temp = machines[j];
+				machines[j] = machines[j + 1];
+				machines[j + 1] = temp;
 			} // if
 		} // for
 	} // for
 	
 	printf("Machines in order of valuation:\n");
-	current = top;
-	while (current != NULL)
+	for (i = 0; i < count; i++)
 	{
+		current = machines[i]; // getting the machine from the sorted array
 		printf("Chassis Number: %s\n", current->chassisNum);
 		printf("Make: %s\n", current->make);
 		printf("Model: %s\n", current->model);
@@ -894,7 +884,7 @@ void listMachines(machineT* top)
 		printf("Machine Type: %s\n", getMachineType(current->machineType));
 		printf("Breakdown: %s\n\n", getBreakdownStatus(current->breakdown));
 		current = current->NEXT; // next machine
-	} // while
+	} // for
 } // listMachines
 
 void saveToFleetFile(machineT* top)

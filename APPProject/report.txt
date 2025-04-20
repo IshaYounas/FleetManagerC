@@ -1,31 +1,43 @@
 Fleet Management Report
-Chassis Number: CAT56
-Make: BIKER
-Model: S4F
-Year: 2025
-Cost: 2000000.00
-Valuation: 1000000.00
-Mileage: 5000
-Next Service Mileage: 5500
-Owner Name: BOB
-Owner Email: bob@gmail.com
-Owner Phone: Tractor
-Machine Type: Unknown
-Breakdown: Unknown
-
-Chassis Number: TIGER1
-Make: MERCEDES
-Model: GWAGON
-Year: 2025
-Cost: 10000000000.00
-Valuation: 20000000000.00
-Mileage: 500
-Next Service Mileage: 1000
-Owner Name: ALICE
-Owner Email: alice@mercedes.com
-Owner Phone: 123456789
+Chassis Number: bu8
+Make: ca09
+Model: ca579
+Year: 2011
+Cost: 200000.00
+Valuation: 300000.00
+Mileage: 3000
+Next Service Mileage: 3500
+Owner Name: alice
+Owner Email: alice@gmail.com
+Owner Phone: 0987654321
 Machine Type: Mixer
-Breakdown: Never
+Breakdown: More than five times
+
+Chassis Number: ca67
+Make: car1
+Model: car12
+Year: 1992
+Cost: 10000.00
+Valuation: 10000.08
+Mileage: 1000
+Next Service Mileage: 2000
+Owner Name: joe
+Owner Email: joe@gmail.com
+Owner Phone: 1234567890
+Machine Type: Tractor
+Breakdown: Less than three times
 
 
 Statistics:
+Tractors - 1:
+A. Never: 0.00%
+B. Less than three times: 100.00%
+C. Less than five times: 0.00%
+D. More than five times: 0.00%
+
+Mixers - 1:
+A. Never: 0.00%
+B. Less than three times: 0.00%
+C. Less than five times: 0.00%
+D. More than five times: 100.00%
+
