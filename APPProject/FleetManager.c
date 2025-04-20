@@ -85,29 +85,8 @@ int main()
 	int user;
 	int adminOption;
 	FILE* fp;
-	loginT* data[3];
+	loginT data[3];
 	int i;
-
-	for (i = 0; i < MAX_LOGIN_RECORDS; i++)
-	{
-		data[i] = (loginT*)malloc(sizeof(loginT));
-	} // for
-
-	fp = fopen("login.txt", "r");
-
-	if (fp == NULL) // file no open
-	{
-		printf("login.txt cannot be opened for reading\n");
-	} // if
-
-	else // file open
-	{
-		for (i = 0; i < MAX_LOGIN_RECORDS; i++)
-		{
-			fscanf(fp, "%s %s", data[i]->username, data[i]->password);
-		} // for
-		fclose(fp);
-	} // else
 
 	// prompting the user for input
 	printf("PLease enter 1 for admin or 0 for guest\n");
@@ -115,20 +94,39 @@ int main()
 
 	if (user == 1) // admin
 	{
-		if (login(data) == 1) // passwords match 
+		fp = fopen("login.txt", "r");
+
+		if (fp == NULL) // file no open
 		{
-			printf("Admin login successful\n");
+			printf("login.txt cannot be opened for reading\n\n");
+			return 1; // exit
 		} // if
 
-		else // passwords NO match
+		// reading the login file
+		else // file open
 		{
-			printf("Incorrect password. Proceeding as Guest\n");
+			for (i = 0; i < MAX_LOGIN_RECORDS; i++)
+			{
+				fscanf(fp, "%s %s", data[i].username, data[i].password);
+			} // for
+
+			fclose(fp); // close the file
+
+			if (login(data) == 1) // passwords match 
+			{
+				printf("Admin login successful\n\n");
+			} // if
+
+			else // passwords NO match
+			{
+				printf("Incorrect password. Proceeding as Guest\n\n");
+			} // else
 		} // else
 	} // if
 
 	else if (user == 0) // user
 	{
-		printf("User is guest\n");
+		printf("User is guest\n\n");
 	} // else if
 
 	loadFleetFile(&headPtr); // loading the fleet file
@@ -209,55 +207,60 @@ int main()
 int login(loginT data[])
 {
 	// variables
-	FILE* fp;
-	char adminPass[20];
+	char adminPass[PASSWORD_LENGTH] = { 0 };
 	char adminUsername[20];
-	int found = 0;
 	char ch;
 	int i = 0;
 
-	fp = fopen("login.txt", "r");
+	// prompting the admin for the password
+	printf("Enter Admin Username\n");
+	scanf("%19s", adminUsername);
 
-	if (fp == NULL) // file no open
+	printf("Enter Admin Password (must be 6 characters)\n");
+
+	while (1) 
 	{
-		printf("login.txt cannot be opened for reading\n");
-	} // if
+		ch = _getch(); // hiding the password
 
-	else
+		if (ch == '\r') // enter 
+		{
+			if (i == PASSWORD_LENGTH - 1) // Exactly 6 chars entered
+			{
+				break; // Exit the loop
+			} // if
+		} // if
+
+		else if (ch == '\b') // backspace pressed
+		{
+			if (i > 0)
+			{
+				i--;
+				printf("\b \b"); // Erase the asterisk
+			} // if
+		} // else if
+
+		else if (i < PASSWORD_LENGTH - 1) // Room for more characters
+		{
+			if (isprint(ch)) // Only accept printable characters
+			{
+				adminPass[i++] = ch;
+				printf("*");
+			} // if
+		} // else if
+		// If i == PASSWORD_LENGTH-1, ignore extra characters until Enter
+	} // while
+
+	adminPass[i] = '\0';
+	printf("\n");
+	
+	for (i = 0; i < MAX_LOGIN_RECORDS; i++)
 	{
-		fscanf(fp, "%s %s", data->username, data->password);
-		fclose(fp);
-
-		// prompting the admin for the password
-		printf("Enter Admin Username\n");
-		scanf("%s", adminUsername);
-
-		printf("Enter Admin Password\n");
-
-		while ((ch = _getch()) != '\r') // until enter is pressed
+		if (strcmp(data[i].username, adminUsername) == 0 && strcmp(data[i].password, adminPass) == 0) // username and password match
 		{
-			if (ch != 13) // no enter key
-			{
-				adminPass[i] = ch; // store the character
-				i++;
-				printf("*"); // print asterisk
-			} // if
-		} // while
-
-		adminPass[i] = '\0';
-		printf("\n");
-
-		for (i = 0; i < 3; i++)
-		{
-			if (strcmp(data[i].username, adminUsername) == 0 && strcmp(data[i].password, adminPass) == 0) // username and password match
-			{
-				found = 1; // found
-				break;
-			} // if
-		} // for
-		fclose(fp); // close login.txt
-		return found; 
-	} // else
+			return 1; // login successful
+		} // if
+	} // for
+	return 0; // login failed
 } // login
 
 void addMachine(machineT** top) // adding machinery 
