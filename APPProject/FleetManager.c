@@ -299,12 +299,34 @@ void addMachine(machineT** top) // adding machinery
 	scanf("%s", newMachine->make);
 	printf("Enter model: ");
 	scanf("%s", newMachine->model);
-	printf("Enter year: ");
+
+	printf("Enter year (1925-2025): ");
 	scanf("%d", &newMachine->year);
-	printf("Enter cost: ");
+	
+	while (newMachine->year < 1925 || newMachine->year > 2025) // checking if the year is valid
+	{
+		printf("Invalid year. Please enter a valid year (1925-2023): ");
+		scanf("%d", &newMachine->year);
+	} // while
+
+	printf("Enter cost (greater than 0): ");
 	scanf("%f", &newMachine->cost);
-	printf("Enter valuation: ");
+
+	while (newMachine->cost > 0) // checking if the cost is valid
+	{
+		printf("Invalid cost. Please enter a valid cost: ");
+		scanf("%f", &newMachine->cost);
+	} // while
+
+	printf("Enter valuation (greater than 0): ");
 	scanf("%f", &newMachine->valuation);
+
+	while (newMachine->valuation > 0) // checking if the valuation is valid
+	{
+		printf("Invalid valuation. Please enter a valid valuation: ");
+		scanf("%f", &newMachine->valuation);
+	} // while
+
 	printf("Enter mileage: ");
 	scanf("%d", &newMachine->mileage);
 	printf("Enter next service mileage: ");
@@ -331,9 +353,15 @@ void addMachine(machineT** top) // adding machinery
 	} while (!validEmail); // do - while
 
 
-	printf("Enter owner phone: ");
+	printf("Enter owner phone (must be 10 digits): ");
 	scanf("%s", newMachine->ownerPhone);
 
+	// validating the phone number
+	while (strlen(newMachine->ownerPhone) != 10) // checking if the phone number is valid
+	{
+		printf("Invalid phone number. Please enter a valid phone number (10 digits): ");
+		scanf("%s", newMachine->ownerPhone);
+	} // while
 
 	printf("Enter machine type (1 for Tractor, 2 for Excavator, 3 for Roller, 4 for Crane, 5 for Mixer): ");
 	scanf("%d", &newMachine->machineType);
@@ -457,12 +485,34 @@ void updateMachine(machineT* top)
 			scanf("%s", current->make);
 			printf("Enter new model: ");
 			scanf("%s", current->model);
-			printf("Enter new year: ");
+
+			printf("Enter new year (1925-2025): ");
 			scanf("%d", &current->year);
-			printf("Enter new cost: ");
+
+			while (current->year < 1925 || current->year > 2025) // checking if the year is valid
+			{
+				printf("Invalid year. Please enter a valid year (1925-2025): ");
+				scanf("%d", &current->year);
+			} // while
+
+			printf("Enter cost (greater than 0): ");
 			scanf("%f", &current->cost);
-			printf("Enter new valuation: ");
+
+			while (current->cost > 0) // checking if the cost is valid
+			{
+				printf("Invalid cost. Please enter a valid cost: ");
+				scanf("%f", &current->cost);
+			} // while
+
+			printf("Enter valuation (greater than 0): ");
 			scanf("%f", &current->valuation);
+
+			while (current->valuation > 0) // checking if the valuation is valid
+			{
+				printf("Invalid valuation. Please enter a valid valuation: ");
+				scanf("%f", &current->valuation);
+			} // while
+
 			printf("Enter new mileage: ");
 			scanf("%d", &current->mileage);
 			printf("Enter new next service mileage: ");
@@ -471,9 +521,34 @@ void updateMachine(machineT* top)
 			scanf("%s", current->ownerName);
 			printf("Enter new owner email: ");
 			scanf("%s", current->ownerEmail);
-			printf("Enter new owner phone: ");
+
+			// validating the email
+			int validEmail = 0;
+			do
+			{
+				printf("Enter new owner email (must contain an @, a full stop and a .com): ");
+				scanf("%s", current->ownerEmail);
+				// checking if the email is valid
+				if (strstr(current->ownerEmail, "@") != NULL && strstr(current->ownerEmail, ".") != NULL && strstr(current->ownerEmail, ".com") != NULL)
+				{
+					validEmail = 1; // valid email
+				} // if
+				else
+				{
+					printf("Invalid email. Please enter a valid email address.\n");
+					validEmail = 0; // invalid email
+				} // else
+			} while (!validEmail); // do - while
+
+			// validating the phone number
+			printf("Enter new owner phone (must be 10 digits): ");
 			scanf("%s", current->ownerPhone);
 
+			while (strlen(current->ownerPhone) != 10) // checking if the phone number is valid
+			{
+				printf("Invalid phone number. Please enter a valid phone number (10 digits): ");
+				scanf("%s", current->ownerPhone);
+			} // while
 
 			printf("Enter new machine type (1 for Tractor, 2 for Excavator, 3 for Roller, 4 for Crane, 5 for Mixer): ");
 			scanf("%d", &current->machineType);
@@ -546,6 +621,12 @@ void generateStatistics(machineT* top)
 	if (top == NULL)
 	{
 		printf("No machines to generate statistics\n\n");
+		return;
+	} // if
+
+	if (top == NULL)
+	{
+		printf("Error generating statistics\n\n");
 		return;
 	} // if
 
@@ -666,6 +747,34 @@ void saveToFile(machineT* top)
 		fprintf(fp, "Fleet Management Report\n");
 		while (current != NULL)
 		{
+			switch (current->machineType)
+			{
+				case 1: // tractor
+					totalTractor++;
+					tractor[current->breakdown - 1]++;
+					break;
+
+				case 2: // excavator
+					totalExcavator++;
+					excavator[current->breakdown - 1]++;
+					break;
+
+				case 3: // roller
+					totalRoller++;
+					roller[current->breakdown - 1]++;
+					break;
+
+				case 4: // crane
+					totalCrane++;
+					crane[current->breakdown - 1]++;
+					break;
+
+				case 5: // mixer
+					totalMixer++;
+					mixer[current->breakdown - 1]++;
+					break;
+			} // switch
+
 			fprintf(fp, "Chassis Number: %s\n", current->chassisNum);
 			fprintf(fp, "Make: %s\n", current->make);
 			fprintf(fp, "Model: %s\n", current->model);
@@ -704,7 +813,7 @@ void saveToFile(machineT* top)
 
 		if (totalRoller > 0)
 		{
-			fprintf("Rollers - %d:\n", totalRoller);
+			fprintf(fp, "Rollers - %d:\n", totalRoller);
 			fprintf(fp, "A. Never: %.2f%%\n", (float)roller[0] / totalRoller * 100);
 			fprintf(fp, "B. Less than three times: %.2f%%\n", (float)roller[1] / totalRoller * 100);
 			fprintf(fp, "C. Less than five times: %.2f%%\n", (float)roller[2] / totalRoller * 100);
@@ -737,8 +846,9 @@ void saveToFile(machineT* top)
 void listMachines(machineT* top)
 {
 	// variables
-	machineT* temp;
-	machineT* list;
+	machineT tempMachine;
+	machineT* index;
+	machineT* current;
 	int count = 0;
 	int i;
 	int j;
@@ -749,59 +859,39 @@ void listMachines(machineT* top)
 		return;
 	} // if
 
-	temp = top;
-
-	while (temp != NULL)
+	for (current = top; current != NULL; current = current->NEXT)
 	{
-		count++;
-		temp = temp->NEXT; // next machine
-	} // while
-
-	list = (machineT*)malloc(count * sizeof(machineT));
-	if (list == NULL)
-	{
-		printf("Memory allocation failed\n\n");
-		return;
-	} // if
-
-	temp = top;
-	for (i = 0; i < count; i++)
-	{
-		list[i] = *temp; // copying the data
-		temp = temp->NEXT; // next machine
-	} // for
-
-	for (i = 0; i < count; i++)
-	{
-		for (j = 0; j < count - i - 1; j++)
+		for (index = current->NEXT; index != NULL; index = index->NEXT)
 		{
-			if (list[j].valuation > list[j + 1].valuation)
+			if (current->valuation > index->valuation)
 			{
-				machineT tempMachine = list[j];
-				list[j] = list[j + 1];
-				list[j + 1] = tempMachine;
+				// swapping the data of current and index
+				tempMachine = *current;
+				*current = *index;
+				*index = tempMachine;
 			} // if
-		} // for (j)
-	} // for (i)
-
-	printf("Machines in order of valuation:\n");
-	for (int i = 0; i < count; i++)
-	{
-		printf("Chassis Number: %s\n", list[i].chassisNum);
-		printf("Make: %s\n", list[i].make);
-		printf("Model: %s\n", list[i].model);
-		printf("Year: %d\n", list[i].year);
-		printf("Cost: %.2f\n", list[i].cost);
-		printf("Valuation: %.2f\n", list[i].valuation);
-		printf("Mileage: %d\n", list[i].mileage);
-		printf("Next Service Mileage: %d\n", list[i].nextServiceMileage);
-		printf("Owner Name: %s\n", list[i].ownerName);
-		printf("Owner Email: %s\n", list[i].ownerEmail);
-		printf("Owner Phone: %s\n", list[i].ownerPhone);
-		printf("Machine Type: %s\n", getMachineType(list[i].machineType));
-		printf("Breakdown: %s\n", getBreakdownStatus(list[i].breakdown));
+		} // for
 	} // for
-	free(list); // free memory
+	
+	printf("Machines in order of valuation:\n");
+	current = top;
+	while (current != NULL)
+	{
+		printf("Chassis Number: %s\n", current->chassisNum);
+		printf("Make: %s\n", current->make);
+		printf("Model: %s\n", current->model);
+		printf("Year: %d\n", current->year);
+		printf("Cost: %.2f\n", current->cost);
+		printf("Valuation: %.2f\n", current->valuation);
+		printf("Mileage: %d\n", current->mileage);
+		printf("Next Service Mileage: %d\n", current->nextServiceMileage);
+		printf("Owner Name: %s\n", current->ownerName);
+		printf("Owner Email: %s\n", current->ownerEmail);
+		printf("Owner Phone: %s\n", current->ownerPhone);
+		printf("Machine Type: %s\n", getMachineType(current->machineType));
+		printf("Breakdown: %s\n\n", getBreakdownStatus(current->breakdown));
+		current = current->NEXT; // next machine
+	} // while
 } // listMachines
 
 void saveToFleetFile(machineT* top)
