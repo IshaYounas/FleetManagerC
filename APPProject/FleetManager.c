@@ -89,11 +89,11 @@ int main()
 	int i;
 
 	// prompting the user for input
-	printf("PLease enter 1 for admin or 0 for guest\n");
-	scanf("%d", &user);
+	//printf("PLease enter 1 for admin or 0 for guest\n");
+	//scanf("%d", &user);
 
-	if (user == 1) // admin
-	{
+	//if (user == 1) // admin
+	//{
 		fp = fopen("login.txt", "r");
 
 		if (fp == NULL) // file no open
@@ -119,16 +119,21 @@ int main()
 
 			else // passwords NO match
 			{
-				printf("Incorrect password. Proceeding as Guest\n\n");
+				printf("Incorrect password\n");
+				printf("Cannot access system\n");
+				return; // exit
+				//printf("Incorrect password. Proceeding as Guest\n\n");
 			} // else
 		} // else
-	} // if
-
+	//} // if
+	/*
 	else if (user == 0) // user
 	{
-		printf("User is guest\n\n");
+		printf("Cannot access system\n");
+		return; // exit
+		//printf("User is guest\n\n"); 
 	} // else if
-
+	*/
 	loadFleetFile(&headPtr); // loading the fleet file
 
 	do 
@@ -145,28 +150,32 @@ int main()
 				break;
 
 			case 3:
-				if (user == 1) // admin
-				{
+				//if (user == 1) // admin
+				//{
 					displayMachineDetails(headPtr);
-				} // if
-
+					break;
+				//} // if
+				/*	
 				else if (user == 0) // guest
 				{
 					printf("Only admin have permission to display the machine!\n");
 				} // else if
 				break;
+				*/
 				
 			case 4:
-				if (user == 1) // admin
-				{
+				//if (user == 1) // admin
+				//{
 					updateMachine(headPtr);
-				} // if
-
+					break;
+				//} // if
+				/*
 				else if (user == 0) // guest
 				{
 					printf("Only admin have permission to edit the machine!\n");
 				} // else if
 				break;
+				*/
 
 			case 5:
 				deleteMachine(headPtr);
@@ -206,10 +215,10 @@ int login(loginT data[])
 	int i = 0;
 
 	// prompting the admin for the password
-	printf("Enter Admin Username\n");
+	printf("Enter Admin Username:\n");
 	scanf("%19s", adminUsername);
 
-	printf("Enter Admin Password (must be 6 characters)\n");
+	printf("Enter Admin Password (must be 6 characters):\n");
 
 	while (1) 
 	{
@@ -240,7 +249,6 @@ int login(loginT data[])
 				printf("*");
 			} // if
 		} // else if
-		// If i == PASSWORD_LENGTH-1, ignore extra characters until Enter
 	} // while
 
 	adminPass[i] = '\0';
@@ -417,11 +425,10 @@ void displayToScreen(machineT* top) // displaying all the machinery
 		printf("Owner Email: %s\n", top->ownerEmail);
 		printf("Owner Phone: %s\n", top->ownerPhone);
 		printf("Machine Type: %s\n", getMachineType(top->machineType));
-		printf("Breakdown: %s\n", getBreakdownStatus(top->breakdown));	
+		printf("Breakdown: %s\n\n", getBreakdownStatus(top->breakdown));	
 
 		top = top->NEXT; // next machine
 	} // while
-	printf("End of list\n\n");
 } // displayToScreen
 
 void displayMachineDetails(machineT* top) // asking user for a specific machine to display
@@ -448,7 +455,7 @@ void displayMachineDetails(machineT* top) // asking user for a specific machine 
 			printf("Owner Email: %s\n", top->ownerEmail);
 			printf("Owner Phone: %s\n", top->ownerPhone);
 			printf("Machine Type: %s\n", getMachineType(top->machineType));
-			printf("Breakdown: %s\n", getBreakdownStatus(top->breakdown));
+			printf("Breakdown: %s\n\n", getBreakdownStatus(top->breakdown));
 
 			found = 1;
 			break;
@@ -928,6 +935,7 @@ void loadFleetFile(machineT** top)
 
 	while (!feof(fp))
 	{
+		printf("Loading machines\n");
 		current = (machineT*)malloc(sizeof(machineT)); // allocating memory
 	
 		if (current == NULL)
@@ -937,6 +945,7 @@ void loadFleetFile(machineT** top)
 			return;
 		} // if
 
+		// reading from the file
 		numInputs = fscanf(fp, "%s %s %s %d %f %f %d %d %s %s %s %d %d\n", current->chassisNum, current->make, current->model, &current->year, &current->cost, &current->valuation, &current->mileage, &current->nextServiceMileage, current->ownerName, current->ownerEmail, current->ownerPhone, &current->machineType, &current->breakdown);
 
 		if (numInputs == 13)
