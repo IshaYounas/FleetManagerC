@@ -553,11 +553,11 @@ void updateMachine(machineT* top)
 
 			printf("Enter new machine type (1 for Tractor, 2 for Excavator, 3 for Roller, 4 for Crane, 5 for Mixer): ");
 			scanf("%d", &current->machineType);
-			printf("Machine Type: %d\n", getMachineType(current->machineType));
+			printf("Machine Type: %s\n", getMachineType(current->machineType));
 
 			printf("Enter new breakdown (1 for Never, 2 for Less than three times, 3 for Less than five times, 4 for More than five times): ");
 			scanf("%d", &current->breakdown);
-			printf("Breakdown: %d\n", getBreakdownStatus(current->breakdown));
+			printf("Breakdown: %s\n", getBreakdownStatus(current->breakdown));
 
 			printf("Machine updated successfully\n\n");
 			return;

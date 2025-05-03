@@ -1,17 +1,17 @@
 Fleet Management Report
-Chassis Number: bu8
-Make: ca09
-Model: ca579
-Year: 2011
-Cost: 200000.00
-Valuation: 300000.00
-Mileage: 3000
-Next Service Mileage: 3500
-Owner Name: alice
-Owner Email: alice@gmail.com
-Owner Phone: 0987654321
-Machine Type: Mixer
-Breakdown: More than five times
+Chassis Number: TRAC001
+Make: JohnDeere
+Model: Trac0h
+Year: 2025
+Cost: 100000.01
+Valuation: 150000.52
+Mileage: 1000
+Next Service Mileage: 1500
+Owner Name: FarmCo
+Owner Email: contact@farmco.com
+Owner Phone: 0869876543
+Machine Type: Tractor
+Breakdown: Less than three times
 
 Chassis Number: ca67
 Make: car1
@@ -29,15 +29,9 @@ Breakdown: Less than three times
 
 
 Statistics:
-Tractors - 1:
+Tractors - 2:
 A. Never: 0.00%
 B. Less than three times: 100.00%
 C. Less than five times: 0.00%
 D. More than five times: 0.00%
-
-Mixers - 1:
-A. Never: 0.00%
-B. Less than three times: 0.00%
-C. Less than five times: 0.00%
-D. More than five times: 100.00%
 
